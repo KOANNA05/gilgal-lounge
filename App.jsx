@@ -852,14 +852,78 @@ const ADMIN_TABS = [
   { id: "costs", label: "비용 관리", icon: Receipt },
 ];
 
+// 관리자 접속 비밀번호. 원하는 값으로 바꾸고 싶으면 이 줄만 수정하면 돼요.
+const ADMIN_PASSWORD = "gilgal2026";
+
+function useAdminAccess() {
+  const [authed, setAuthed] = useState(() => {
+    try { return localStorage.getItem("gg_admin_authed") === "true"; } catch { return false; }
+  });
+  const [showGate, setShowGate] = useState(false);
+
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("admin") === "1" && !authed) setShowGate(true);
+    } catch { /* ignore */ }
+  }, [authed]);
+
+  const tryUnlock = (pw) => {
+    if (pw === ADMIN_PASSWORD) {
+      setAuthed(true);
+      setShowGate(false);
+      try { localStorage.setItem("gg_admin_authed", "true"); } catch {}
+      return true;
+    }
+    return false;
+  };
+
+  const lock = () => {
+    setAuthed(false);
+    try { localStorage.removeItem("gg_admin_authed"); } catch {}
+  };
+
+  return { authed, showGate, setShowGate, tryUnlock, lock };
+}
+
+function AdminGate({ onSubmit, onCancel }) {
+  const [pw, setPw] = useState("");
+  const [err, setErr] = useState(false);
+  return (
+    <div className="admin-gate-overlay">
+      <div className="admin-gate-box">
+        <h3><StoneCircle size={20} /> 관리자 접속</h3>
+        <p className="muted small">사장님만 볼 수 있는 화면이에요. 비밀번호를 입력해주세요.</p>
+        <input
+          type="password"
+          autoFocus
+          value={pw}
+          onChange={(e) => { setPw(e.target.value); setErr(false); }}
+          onKeyDown={(e) => { if (e.key === "Enter" && !onSubmit(pw)) setErr(true); }}
+          placeholder="비밀번호"
+        />
+        {err && <p className="hint">비밀번호가 올바르지 않아요.</p>}
+        <div className="admin-gate-actions">
+          <button className="btn btn-pine full" onClick={() => { if (!onSubmit(pw)) setErr(true); }}>확인</button>
+          <button className="toplink" onClick={onCancel}>취소</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const [role, setRole] = useState("guest");
+  const { authed: adminAuthed, showGate, setShowGate, tryUnlock, lock } = useAdminAccess();
   const [adminTab, setAdminTab] = useState("dashboard");
   const [reservations, setReservations] = useState(SEED_RESERVATIONS);
   const [inventory, setInventory] = useState(SEED_INVENTORY);
   const [utilityBills, setUtilityBills] = useState(SEED_UTILITY_BILLS);
   const [maintenance, setMaintenance] = useState(SEED_MAINTENANCE);
   const [loaded, setLoaded] = useState(false);
+
+  // 관리자 인증이 풀리면(잠그면) 자동으로 예약자 화면으로 돌아가요.
+  useEffect(() => { if (!adminAuthed && role === "admin") setRole("guest"); }, [adminAuthed, role]);
 
   useEffect(() => {
     (async () => {
@@ -920,13 +984,16 @@ export default function App() {
   return (
     <div className="app">
       <style>{CSS}</style>
+      {showGate && <AdminGate onSubmit={tryUnlock} onCancel={() => setShowGate(false)} />}
       <header className="topbar">
         <div className="brand"><StoneCircle size={20} /> 길갈라운지</div>
-        <nav className="mode-switch">
-          <button className={role === "guest" ? "mode-btn mode-btn-active" : "mode-btn"} onClick={() => setRole("guest")}><Home size={14} /> 예약자</button>
-          <button className={role === "admin" ? "mode-btn mode-btn-active" : "mode-btn"} onClick={() => setRole("admin")}><LayoutDashboard size={14} /> 관리자</button>
-        </nav>
-        {role === "admin" && (
+        {adminAuthed && (
+          <nav className="mode-switch">
+            <button className={role === "guest" ? "mode-btn mode-btn-active" : "mode-btn"} onClick={() => setRole("guest")}><Home size={14} /> 예약자</button>
+            <button className={role === "admin" ? "mode-btn mode-btn-active" : "mode-btn"} onClick={() => setRole("admin")}><LayoutDashboard size={14} /> 관리자</button>
+          </nav>
+        )}
+        {role === "admin" && adminAuthed && (
           <div className="admin-tabs">
             {ADMIN_TABS.map((t) => (
               <button key={t.id} className={adminTab === t.id ? "toplink toplink-active" : "toplink"} onClick={() => setAdminTab(t.id)}>
@@ -937,6 +1004,7 @@ export default function App() {
             <button className={notifyOn ? "toplink toplink-active" : "toplink"} onClick={toggleNotify} title="이 탭이 열려 있을 때 새 예약 알림을 받아요">
               {notifyOn ? <Bell size={14} /> : <BellOff size={14} />} 알림 {notifyOn ? "켜짐" : "꺼짐"}
             </button>
+            <button className="toplink" onClick={lock} title="관리자 화면 잠그기">잠그기</button>
           </div>
         )}
         {role === "guest" && (
@@ -950,10 +1018,10 @@ export default function App() {
 
       <main>
         {role === "guest" && <GuestPage reservations={reservations} onReserve={addReservation} />}
-        {role === "admin" && adminTab === "dashboard" && <AdminDashboard reservations={reservations} inventory={inventory} utilityBills={utilityBills} maintenance={maintenance} />}
-        {role === "admin" && adminTab === "reservations" && <AdminReservations reservations={reservations} setReservations={setReservations} />}
-        {role === "admin" && adminTab === "inventory" && <AdminInventory inventory={inventory} setInventory={setInventory} />}
-        {role === "admin" && adminTab === "costs" && <AdminCosts reservations={reservations} inventory={inventory} utilityBills={utilityBills} setUtilityBills={setUtilityBills} maintenance={maintenance} setMaintenance={setMaintenance} />}
+        {role === "admin" && adminAuthed && adminTab === "dashboard" && <AdminDashboard reservations={reservations} inventory={inventory} utilityBills={utilityBills} maintenance={maintenance} />}
+        {role === "admin" && adminAuthed && adminTab === "reservations" && <AdminReservations reservations={reservations} setReservations={setReservations} />}
+        {role === "admin" && adminAuthed && adminTab === "inventory" && <AdminInventory inventory={inventory} setInventory={setInventory} />}
+        {role === "admin" && adminAuthed && adminTab === "costs" && <AdminCosts reservations={reservations} inventory={inventory} utilityBills={utilityBills} setUtilityBills={setUtilityBills} maintenance={maintenance} setMaintenance={setMaintenance} />}
       </main>
     </div>
   );
@@ -995,6 +1063,12 @@ a { text-decoration: none; }
 .toplink { display:flex; align-items:center; gap:6px; border:none; background:transparent; color:#D8CFB8; padding:8px 12px; border-radius:8px; font-size:13px; font-weight:600; }
 .toplink-active { background: rgba(255,255,255,0.14); color:#fff; }
 .pending-badge { background: var(--terra); color:#fff; font-size:10.5px; font-weight:800; padding:1px 6px; border-radius:999px; margin-left:5px; }
+
+.admin-gate-overlay { position:fixed; inset:0; background:rgba(26,24,16,0.72); display:flex; align-items:center; justify-content:center; z-index:100; padding:20px; }
+.admin-gate-box { background:var(--surface); border-radius:16px; padding:26px 24px; max-width:340px; width:100%; text-align:center; }
+.admin-gate-box h3 { display:flex; align-items:center; justify-content:center; gap:8px; font-size:17px; margin-bottom:8px; }
+.admin-gate-box input { width:100%; border:1px solid var(--line); border-radius:8px; padding:11px 12px; font-size:15px; margin:14px 0 6px; text-align:center; }
+.admin-gate-actions { display:flex; flex-direction:column; gap:8px; margin-top:12px; }
 
 /* ---- hero ---- */
 .hero { position:relative; background: linear-gradient(160deg, #45392C 0%, #2A2118 70%); overflow:hidden; padding: 70px 26px 90px; color:#F3EADD; }
