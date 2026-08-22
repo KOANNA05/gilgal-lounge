@@ -252,9 +252,23 @@ const SEED_INVENTORY = [
     { date: "2026-03-12", qty: 1, cost: 7220, vendor: "쿠팡 · 브리즈문 일회용 석쇠 그릴불판" },
     { date: "2026-03-12", qty: 1, cost: 27900, vendor: "쿠팡 · 지피니 바베큐참숯" },
   ], issueHistory: [] },
-  { id: "i27", category: "캠핑·야외용품", name: "실외 빗자루", unit: "개", quantity: 3, minThreshold: 1, lastCheckedAt: "2026-06-12", purchaseHistory: [], issueHistory: [] },
+  { id: "i27", category: "캠핑·야외용품", name: "실외 빗자루", unit: "개", quantity: 3, minThreshold: 1, lastCheckedAt: "2026-08-13", purchaseHistory: [
+    { date: "2026-08-13", qty: 1, cost: 10360, vendor: "쿠팡 · 월포 도로비 고급형 빗자루" },
+  ], issueHistory: [] },
 
   // 관리·유류
+  { id: "i50", category: "관리·유류", name: "삽 (오삽)", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-08-13", purchaseHistory: [
+    { date: "2026-08-13", qty: 1, cost: 10080, vendor: "쿠팡 · dandan 오삽" },
+  ], issueHistory: [] },
+  { id: "i51", category: "관리·유류", name: "멀티탭 (개별스위치 4구)", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-08-13", purchaseHistory: [
+    { date: "2026-08-13", qty: 2, cost: 14350, vendor: "쿠팡 · 번개표 개별스위치 멀티탭 4구" },
+  ], issueHistory: [{ date: "2026-08-03", type: "고장", note: "1개 반품 처리 (구매 2개 중 1개 반품완료)", resolved: true }] },
+  { id: "i52", category: "관리·유류", name: "양면테이프·수리용품", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-08-03", purchaseHistory: [
+    { date: "2026-08-03", qty: 1, cost: 21150, vendor: "쿠팡 · 몬스터겔 실리콘 양면테이프 30mm x 3m" },
+  ], issueHistory: [] },
+  { id: "i53", category: "관리·유류", name: "도어스토퍼", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-08-03", purchaseHistory: [
+    { date: "2026-08-03", qty: 1, cost: 7500, vendor: "쿠팡 · 철물대장 무타공 원터치 말발굽" },
+  ], issueHistory: [] },
   { id: "i28", category: "관리·유류", name: "등유 (보일러용)", unit: "드럼", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-08-03", purchaseHistory: [{ date: "2026-05-03", qty: 1, cost: 320000, vendor: "" }, { date: "2026-07-18", qty: 1, cost: 290000, vendor: "" }], issueHistory: [{ date: "2026-07-18", type: "고장", note: "온수배관 누수로 수도/보일러 잠금 조치", resolved: true }] },
   { id: "i29", category: "관리·유류", name: "소화기", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-04-01", purchaseHistory: [], issueHistory: [] },
 ];
