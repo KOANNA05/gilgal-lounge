@@ -153,12 +153,8 @@ const SEED_MAINTENANCE = [
   { id: "m4", date: "2026-08-03", category: "유지보수", title: "파쇄석 + 디딤돌 30장", amount: 220000, memo: "마당 정비" },
 ];
 
-const SEED_RESERVATIONS = [
-  { id: "r1", guestName: "김서연", phone: "010-1234-5678", checkIn: "2026-06-06", checkOut: "2026-06-08", guests: 6, request: "", status: "확정", total: 100000, createdAt: "2026-05-20" },
-  { id: "r2", guestName: "박준혁", phone: "010-2222-3333", checkIn: "2026-07-17", checkOut: "2026-07-18", guests: 5, request: "", status: "확정", total: 70000, createdAt: "2026-07-01" },
-  { id: "r3", guestName: "이하늘", phone: "010-4444-5555", checkIn: "2026-08-14", checkOut: "2026-08-16", guests: 4, request: "", status: "확정", total: 120000, createdAt: "2026-08-01" },
-  { id: "r4", guestName: "최도윤", phone: "010-6666-7777", checkIn: "2026-08-28", checkOut: "2026-08-29", guests: 7, request: "반려견 동반 가능한가요?", status: "대기", total: 70000, createdAt: "2026-08-18" },
-];
+// 실제 서비스에는 예약 데이터를 빈 상태로 시작합니다. (데모용 가짜 예약이 실제 날짜를 막는 문제 방지)
+const SEED_RESERVATIONS = [];
 
 /* ---------------------------- 유틸 ---------------------------- */
 
@@ -927,7 +923,7 @@ export default function App() {
 
   useEffect(() => {
     (async () => {
-      const [r, i, u, m] = await Promise.all([storeGet("gg_reservations"), storeGet("gg_inventory"), storeGet("gg_utility"), storeGet("gg_maint")]);
+      const [r, i, u, m] = await Promise.all([storeGet("gg_reservations_v2"), storeGet("gg_inventory_v2"), storeGet("gg_utility_v2"), storeGet("gg_maint_v2")]);
       if (Array.isArray(r) && r.length) setReservations(r);
       if (Array.isArray(i) && i.length) setInventory(i);
       if (Array.isArray(u) && u.length) setUtilityBills(u);
@@ -935,10 +931,10 @@ export default function App() {
       setLoaded(true);
     })();
   }, []);
-  useEffect(() => { if (loaded) storeSet("gg_reservations", reservations); }, [reservations, loaded]);
-  useEffect(() => { if (loaded) storeSet("gg_inventory", inventory); }, [inventory, loaded]);
-  useEffect(() => { if (loaded) storeSet("gg_utility", utilityBills); }, [utilityBills, loaded]);
-  useEffect(() => { if (loaded) storeSet("gg_maint", maintenance); }, [maintenance, loaded]);
+  useEffect(() => { if (loaded) storeSet("gg_reservations_v2", reservations); }, [reservations, loaded]);
+  useEffect(() => { if (loaded) storeSet("gg_inventory_v2", inventory); }, [inventory, loaded]);
+  useEffect(() => { if (loaded) storeSet("gg_utility_v2", utilityBills); }, [utilityBills, loaded]);
+  useEffect(() => { if (loaded) storeSet("gg_maint_v2", maintenance); }, [maintenance, loaded]);
 
   // 새 예약 알림 (이 브라우저 탭이 열려 있고 알림 권한을 허용했을 때만 동작해요)
   const [notifyOn, setNotifyOn] = useState(false);
@@ -950,7 +946,7 @@ export default function App() {
       seenIds.current = new Set(reservations.map((r) => r.id));
     }
     const interval = setInterval(async () => {
-      const latest = await storeGet("gg_reservations");
+      const latest = await storeGet("gg_reservations_v2");
       if (!Array.isArray(latest)) return;
       const newOnes = latest.filter((r) => !seenIds.current.has(r.id));
       if (newOnes.length) {
