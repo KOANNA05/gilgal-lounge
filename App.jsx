@@ -29,6 +29,8 @@ const NEARBY = [
   { name: "곰소염전 & 곰소항", region: "부안", type: "관광지", drive: "약 15분", desc: "소금밭 풍경을 구경하고, 곰소항 시장에서 신선한 젓갈과 수산물을 구경·구매할 수 있는 곳이에요.", url: "https://korean.visitkorea.or.kr/detail/rem_detail.do?cotid=092945d1-5d50-42b1-97be-4d7548e55561" },
   { name: "고사포해수욕장", region: "부안", type: "관광지", drive: "약 30분", desc: "변산반도 국립공원 안에서 가장 긴 모래사장을 가진 한적한 해변이에요. 붐비지 않아 여유롭게 쉬기 좋습니다.", url: "https://www.gybelife.com/2024/11/11_12.html" },
   { name: "내장산 국립공원", region: "정읍", type: "관광지", drive: "약 50분", desc: "가을 단풍으로 전국적으로 유명한 산이에요. 케이블카로도 오를 수 있어 등산이 부담스러운 분도 즐기기 좋습니다.", url: "https://www.jeongeup.go.kr" },
+  { name: "경암동 철길마을", region: "군산", type: "관광지", drive: "약 50분", desc: "옛 철길을 따라 늘어선 낡은 주택과 가게들이 1970~80년대 레트로 감성을 그대로 간직한 곳이에요. 교복을 빌려 입고 사진을 남기기 좋습니다.", url: "https://korean.visitkorea.or.kr/detail/rem_detail.do?cotid=1d1d4d5b-229c-43d8-849e-1760c894bde2" },
+  { name: "선유도 해수욕장", region: "군산", type: "관광지", drive: "약 1시간", desc: "새만금방조제를 건너 고군산군도로 들어가면 만나는 섬이에요. 유리알처럼 고운 백사장이 길게 펼쳐져 명사십리라 불리고, 짚라인과 스카이썬라인 같은 액티비티도 즐길 수 있습니다.", url: "https://korean.visitkorea.or.kr/detail/rem_detail.do?cotid=71d135bc-cb5e-4691-bcfd-ee6d165456d3" },
   { name: "무등산 국립공원", region: "광주", type: "관광지", drive: "약 1시간 20분", desc: "광주를 대표하는 산으로, 주상절리대와 정상부 풍경이 인상적이에요. 조금 멀지만 하루 나들이로 다녀올 만합니다.", url: "https://www.knps.or.kr/portal/main/contents.do?menuNo=7010065" },
   { name: "목포 유달산 & 해상케이블카", region: "목포", type: "관광지", drive: "약 1시간 30분", desc: "목포 시내와 다도해를 한눈에 내려다볼 수 있는 케이블카예요. 야경 명소로도 인기가 많습니다.", url: "https://mokpocablecar.com" },
 ];
@@ -318,14 +320,15 @@ async function storeGet(key) {
 async function storeSet(key, value) {
   try {
     localStorage.setItem(key, JSON.stringify(value));
+    return true;
   } catch {
-    /* ignore */
+    return false;
   }
 }
 const uid = () => Math.random().toString(36).slice(2, 10);
 
 // 사진을 적당한 크기로 줄여서 base64로 반환 (localStorage 용량 절약)
-function resizeImageFile(file, maxWidth = 1000, quality = 0.72) {
+function resizeImageFile(file, maxWidth = 720, quality = 0.6) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onerror = () => reject(new Error("파일을 읽을 수 없어요."));
@@ -501,38 +504,29 @@ function NearbySection() {
 ================================================================= */
 
 function GallerySection({ posts }) {
-  const photos = [EXTERIOR_PHOTO, ...Object.values(SPACE_PHOTOS)];
   return (
     <section className="gallery-section" id="gallery">
       <div className="section-head narrow">
         <p className="eyebrow">길갈라운지 모습</p>
-        <h2>사진으로 먼저 만나보세요</h2>
-      </div>
-      <div className="gallery-grid">
-        {photos.map((src, i) => (
-          <div className="gallery-item" key={i}>
-            <img src={src} alt={`길갈라운지 모습 ${i + 1}`} />
-          </div>
-        ))}
+        <h2>운영자가 전하는 소식</h2>
       </div>
 
-      {posts && posts.length > 0 && (
-        <div className="gallery-feed">
-          <p className="gallery-feed-title">운영자가 전하는 소식</p>
-          <div className="gallery-feed-list">
-            {[...posts].reverse().map((p) => (
-              <div className="gallery-post" key={p.id}>
-                <img src={p.src} alt={p.caption || "길갈라운지 소식"} />
-                {(p.caption || p.createdAt) && (
-                  <div className="gallery-post-body">
-                    {p.caption && <p>{p.caption}</p>}
-                    <span className="muted small">{p.createdAt}</span>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+      {posts && posts.length > 0 ? (
+        <div className="gallery-feed-list">
+          {[...posts].reverse().map((p) => (
+            <div className="gallery-post" key={p.id}>
+              <img src={p.src} alt={p.caption || "길갈라운지 소식"} />
+              {(p.caption || p.createdAt) && (
+                <div className="gallery-post-body">
+                  {p.caption && <p>{p.caption}</p>}
+                  <span className="muted small">{p.createdAt}</span>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
+      ) : (
+        <p className="empty">아직 올라온 사진이 없어요. 곧 소식을 전해드릴게요!</p>
       )}
     </section>
   );
@@ -1463,7 +1457,14 @@ export default function App() {
   useEffect(() => { if (loaded) storeSet("gg_reservations_v2", reservations); }, [reservations, loaded]);
   useEffect(() => { if (loaded) storeSet("gg_inventory_v2", inventory); }, [inventory, loaded]);
   useEffect(() => { if (loaded) storeSet("gg_inquiries_v1", inquiries); }, [inquiries, loaded]);
-  useEffect(() => { if (loaded) storeSet("gg_gallery_v1", gallery); }, [gallery, loaded]);
+  useEffect(() => {
+    if (!loaded) return;
+    storeSet("gg_gallery_v1", gallery).then((ok) => {
+      if (!ok && gallery.length > 0) {
+        alert("사진 저장 공간이 가득 찼어요. 방금 올린 사진이 저장되지 않았을 수 있어요. 오래된 사진을 몇 개 지우고 다시 올려주세요.");
+      }
+    });
+  }, [gallery, loaded]);
   useEffect(() => { if (loaded) storeSet("gg_utility_v2", utilityBills); }, [utilityBills, loaded]);
   useEffect(() => { if (loaded) storeSet("gg_maint_v2", maintenance); }, [maintenance, loaded]);
 
