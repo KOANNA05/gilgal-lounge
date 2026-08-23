@@ -406,6 +406,39 @@ function last6Months() {
   return arr;
 }
 
+// 지금까지 기록된 모든 데이터(예약·공과금·비품구매·유지보수)를 월별로 합산
+function computeAllMonthlyTotals(reservations, inventory, utilityBills, maintenance) {
+  const monthSet = new Set();
+  reservations.forEach((r) => { if (r.status !== "취소") monthSet.add(monthKey(r.checkIn)); });
+  utilityBills.forEach((u) => monthSet.add(u.month));
+  inventory.forEach((i) => i.purchaseHistory.forEach((p) => monthSet.add(monthKey(p.date))));
+  maintenance.forEach((m) => monthSet.add(monthKey(m.date)));
+  monthSet.delete("");
+
+  const months = [...monthSet].sort();
+  return months.map((m) => {
+    const revenue = reservations.filter((r) => r.status !== "취소" && monthKey(r.checkIn) === m).reduce((s, r) => s + r.total, 0);
+    const utilityCost = utilityBills.filter((u) => u.month === m).reduce((s, u) => s + u.amount, 0);
+    const purchaseCost = inventory.reduce((s, item) => s + item.purchaseHistory.filter((p) => monthKey(p.date) === m).reduce((ss, p) => ss + p.cost, 0), 0);
+    const maintCost = maintenance.filter((e) => monthKey(e.date) === m).reduce((s, e) => s + e.amount, 0);
+    const expense = utilityCost + purchaseCost + maintCost;
+    return { month: m, revenue, expense, profit: revenue - expense };
+  });
+}
+
+function groupByYear(monthlyTotals) {
+  const map = new Map();
+  monthlyTotals.forEach((row) => {
+    const year = row.month.slice(0, 4);
+    if (!map.has(year)) map.set(year, { year, revenue: 0, expense: 0, profit: 0 });
+    const y = map.get(year);
+    y.revenue += row.revenue;
+    y.expense += row.expense;
+    y.profit += row.profit;
+  });
+  return [...map.values()].sort((a, b) => a.year.localeCompare(b.year));
+}
+
 /* ---------------------------- 시그니처: 스톤 서클 ---------------------------- */
 
 function StoneCircle({ size = 40, tone = "#B5573A" }) {
@@ -598,7 +631,9 @@ function BookingCalendar({ reservations }) {
     const set = new Set();
     reservations.forEach((r) => {
       if (r.status === "취소") return;
+      // 체크인일부터 체크아웃일까지 모두 "예약중"으로 표시 (체크아웃 당일도 포함)
       dateRange(r.checkIn, r.checkOut).forEach((d) => set.add(d.toISOString().slice(0, 10)));
+      set.add(r.checkOut);
     });
     return set;
   }, [reservations]);
@@ -1248,6 +1283,12 @@ function AdminInquiries({ inquiries, onAnswer }) {
 }
 
 function AdminCosts({ reservations, inventory, utilityBills, setUtilityBills, maintenance, setMaintenance }) {
+  const allMonthlyTotals = useMemo(() => computeAllMonthlyTotals(reservations, inventory, utilityBills, maintenance), [reservations, inventory, utilityBills, maintenance]);
+  const yearlyTotals = useMemo(() => groupByYear(allMonthlyTotals), [allMonthlyTotals]);
+  const monthOptions = useMemo(() => {
+    const set = new Set([...last6Months(), ...allMonthlyTotals.map((r) => r.month)]);
+    return [...set].sort();
+  }, [allMonthlyTotals]);
   const months = last6Months();
   const [month, setMonth] = useState(months[months.length - 1]);
   const [newBill, setNewBill] = useState({ month: months[months.length - 1], type: "전기", amount: "", memo: "" });
@@ -1336,7 +1377,7 @@ function AdminCosts({ reservations, inventory, utilityBills, setUtilityBills, ma
         <div className="section-head">
           <h3>월별 손익 요약</h3>
           <select className="status-select" value={month} onChange={(e) => setMonth(e.target.value)}>
-            {months.map((m) => <option key={m} value={m}>{m}</option>)}
+            {monthOptions.map((m) => <option key={m} value={m}>{m}</option>)}
           </select>
         </div>
         <div className="stat-row">
@@ -1348,6 +1389,48 @@ function AdminCosts({ reservations, inventory, utilityBills, setUtilityBills, ma
           <div className="mini-row"><span>고정비</span><span /><span>{won(fixedTotal)}</span></div>
           <div className="mini-row"><span>비품 구매</span><span /><span>{won(purchaseTotal)}</span></div>
           <div className="mini-row"><span>유지보수·기타</span><span /><span>{won(maintTotal)}</span></div>
+        </div>
+      </div>
+
+      <div className="panel">
+        <h3>연도별 합계</h3>
+        <div className="table-wrap">
+          <table className="tbl">
+            <thead><tr><th>연도</th><th>매출</th><th>지출</th><th>순이익</th></tr></thead>
+            <tbody>
+              {yearlyTotals.length === 0 ? (
+                <tr><td colSpan={4} className="empty">기록된 데이터가 없어요.</td></tr>
+              ) : yearlyTotals.map((y) => (
+                <tr key={y.year}>
+                  <td><strong>{y.year}년</strong></td>
+                  <td>{won(y.revenue)}</td>
+                  <td>{won(y.expense)}</td>
+                  <td className={y.profit >= 0 ? "tone-ok-text" : "tone-warn-text"}>{won(y.profit)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div className="panel">
+        <h3>월별 합계 (전체 기간)</h3>
+        <div className="table-wrap">
+          <table className="tbl">
+            <thead><tr><th>월</th><th>매출</th><th>지출</th><th>순이익</th></tr></thead>
+            <tbody>
+              {allMonthlyTotals.length === 0 ? (
+                <tr><td colSpan={4} className="empty">기록된 데이터가 없어요.</td></tr>
+              ) : [...allMonthlyTotals].reverse().map((row) => (
+                <tr key={row.month}>
+                  <td className="muted small">{row.month}</td>
+                  <td>{won(row.revenue)}</td>
+                  <td>{won(row.expense)}</td>
+                  <td className={row.profit >= 0 ? "tone-ok-text" : "tone-warn-text"}>{won(row.profit)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
