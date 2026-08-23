@@ -1041,6 +1041,7 @@ function AdminReservations({ reservations, setReservations }) {
 function AdminInventory({ inventory, setInventory }) {
   const [openAdd, setOpenAdd] = useState(false);
   const [issueFor, setIssueFor] = useState(null);
+  const [view, setView] = useState("table");
   const [newItem, setNewItem] = useState({ category: INVENTORY_CATEGORIES[0], name: "", unit: "개", quantity: 0, minThreshold: 1 });
 
   const adjust = (id, delta) => setInventory((prev) => prev.map((i) => (i.id === id ? { ...i, quantity: Math.max(0, i.quantity + delta) } : i)));
@@ -1050,12 +1051,22 @@ function AdminInventory({ inventory, setInventory }) {
   const addIssue = (id, issue) => setInventory((prev) => prev.map((i) => (i.id === id ? { ...i, issueHistory: [issue, ...i.issueHistory] } : i)));
 
   const byCategory = INVENTORY_CATEGORIES.map((c) => ({ category: c, items: inventory.filter((i) => i.category === c) })).filter((g) => g.items.length);
+  const sortedFlat = [...inventory].sort((a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name));
+
+  const latestPurchase = (item) => {
+    if (!item.purchaseHistory || item.purchaseHistory.length === 0) return null;
+    return [...item.purchaseHistory].sort((a, b) => b.date.localeCompare(a.date))[0];
+  };
 
   return (
     <div className="page-pad">
       <div className="section-head">
         <h2>비품 관리</h2>
-        <button className="btn btn-moss" onClick={() => setOpenAdd((v) => !v)}><Plus size={15} /> 품목 추가</button>
+        <div className="inv-view-toggle">
+          <button className={view === "table" ? "toplink-solid toplink-solid-active" : "toplink-solid"} onClick={() => setView("table")}>표로 보기</button>
+          <button className={view === "card" ? "toplink-solid toplink-solid-active" : "toplink-solid"} onClick={() => setView("card")}>카드로 보기</button>
+          <button className="btn btn-moss" onClick={() => setOpenAdd((v) => !v)}><Plus size={15} /> 품목 추가</button>
+        </div>
       </div>
 
       {openAdd && (
@@ -1095,7 +1106,38 @@ function AdminInventory({ inventory, setInventory }) {
         </div>
       )}
 
-      {byCategory.map((group) => (
+      {view === "table" && (
+        <div className="table-wrap">
+          <table className="tbl">
+            <thead>
+              <tr><th>카테고리</th><th>품목명</th><th>수량</th><th>최소수량</th><th>마지막 점검</th><th>최근 구매</th><th></th></tr>
+            </thead>
+            <tbody>
+              {sortedFlat.map((item) => {
+                const low = item.quantity <= item.minThreshold;
+                const lp = latestPurchase(item);
+                return (
+                  <tr key={item.id}>
+                    <td className="muted small">{item.category}</td>
+                    <td><strong>{item.name}</strong></td>
+                    <td className={low ? "tone-warn-text" : ""}>{item.quantity}{item.unit}</td>
+                    <td className="muted small">{item.minThreshold}{item.unit}</td>
+                    <td className="muted small">{item.lastCheckedAt}</td>
+                    <td className="muted small">{lp ? `${lp.date} · ${won(lp.cost)}${lp.vendor ? ` · ${lp.vendor}` : ""}` : "-"}</td>
+                    <td>
+                      <button className="icon-btn" onClick={() => adjust(item.id, -1)} title="사용"><PackageMinus size={14} /></button>
+                      <button className="icon-btn" onClick={() => adjust(item.id, 1)} title="입고"><PackagePlus size={14} /></button>
+                      <button className="icon-btn" onClick={() => remove(item.id)} title="삭제"><Trash2 size={14} /></button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {view === "card" && byCategory.map((group) => (
         <div key={group.category} className="inv-group">
           <h3 className="sub-head">{group.category}</h3>
           <div className="inv-list">
@@ -1557,6 +1599,9 @@ a { text-decoration: none; }
 .toplink { display:flex; align-items:center; gap:6px; border:none; background:transparent; color:#D8CFB8; padding:8px 12px; border-radius:8px; font-size:13px; font-weight:600; }
 .toplink-active { background: rgba(255,255,255,0.14); color:#fff; }
 .pending-badge { background: var(--terra); color:#fff; font-size:10.5px; font-weight:800; padding:1px 6px; border-radius:999px; margin-left:5px; }
+.inv-view-toggle { display:flex; align-items:center; gap:8px; }
+.toplink-solid { border:1px solid var(--line); background:var(--surface); color:#6E6850; padding:8px 14px; border-radius:10px; font-size:12.5px; font-weight:700; }
+.toplink-solid-active { background: var(--stone-dark); color:#fff; border-color: var(--stone-dark); }
 
 .admin-gate-overlay { position:fixed; inset:0; background:rgba(26,24,16,0.72); display:flex; align-items:center; justify-content:center; z-index:100; padding:20px; }
 .admin-gate-box { background:var(--surface); border-radius:16px; padding:26px 24px; max-width:340px; width:100%; text-align:center; }
