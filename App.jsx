@@ -6,6 +6,7 @@ import {
   ChevronLeft, ChevronDown, Check, X, LayoutDashboard, Boxes, Receipt,
   CalendarCheck, Users, Phone, MapPin, CircleDot, Sofa, Thermometer,
   CalendarDays, ClipboardCheck, Bell, BellOff, Waves, ExternalLink, MessageCircle,
+  Image as ImageIcon,
 } from "lucide-react";
 import {
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Legend,
@@ -322,6 +323,31 @@ async function storeSet(key, value) {
   }
 }
 const uid = () => Math.random().toString(36).slice(2, 10);
+
+// 사진을 적당한 크기로 줄여서 base64로 반환 (localStorage 용량 절약)
+function resizeImageFile(file, maxWidth = 1000, quality = 0.72) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("파일을 읽을 수 없어요."));
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxWidth / img.width);
+        const w = Math.round(img.width * scale);
+        const h = Math.round(img.height * scale);
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL("image/jpeg", quality));
+      };
+      img.onerror = () => reject(new Error("이미지를 불러올 수 없어요."));
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
 const won = (n) => Math.round(n).toLocaleString("ko-KR") + "원";
 
 // 예약 알림 백엔드 주소. Render 등에 배포한 뒤 이 값을 채워 넣으면
@@ -474,7 +500,7 @@ function NearbySection() {
    게스트 화면
 ================================================================= */
 
-function GallerySection() {
+function GallerySection({ posts }) {
   const photos = [EXTERIOR_PHOTO, ...Object.values(SPACE_PHOTOS)];
   return (
     <section className="gallery-section" id="gallery">
@@ -489,7 +515,87 @@ function GallerySection() {
           </div>
         ))}
       </div>
+
+      {posts && posts.length > 0 && (
+        <div className="gallery-feed">
+          <p className="gallery-feed-title">운영자가 전하는 소식</p>
+          <div className="gallery-feed-list">
+            {[...posts].reverse().map((p) => (
+              <div className="gallery-post" key={p.id}>
+                <img src={p.src} alt={p.caption || "길갈라운지 소식"} />
+                {(p.caption || p.createdAt) && (
+                  <div className="gallery-post-body">
+                    {p.caption && <p>{p.caption}</p>}
+                    <span className="muted small">{p.createdAt}</span>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </section>
+  );
+}
+
+function AdminGallery({ posts, onAdd, onDelete }) {
+  const [caption, setCaption] = useState("");
+  const [preview, setPreview] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const fileRef = useRef(null);
+
+  const handleFile = async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    setBusy(true);
+    try {
+      const dataUrl = await resizeImageFile(file);
+      setPreview(dataUrl);
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const submit = () => {
+    if (!preview) return;
+    onAdd({ id: uid(), src: preview, caption: caption.trim(), createdAt: new Date().toISOString().slice(0, 10) });
+    setPreview(null);
+    setCaption("");
+    if (fileRef.current) fileRef.current.value = "";
+  };
+
+  return (
+    <div className="page-pad">
+      <div className="section-head"><h2>길갈라운지 모습 관리</h2><span className="muted">{posts.length}건</span></div>
+
+      <div className="panel">
+        <h3>새 사진 올리기</h3>
+        <input type="file" accept="image/*" ref={fileRef} onChange={handleFile} className="file-input" />
+        {busy && <p className="muted small">사진 준비 중...</p>}
+        {preview && <img src={preview} alt="미리보기" className="gallery-preview" />}
+        <label className="field" style={{ marginTop: 12 }}>글 (선택)
+          <textarea rows={2} value={caption} onChange={(e) => setCaption(e.target.value)} placeholder="사진에 대한 이야기를 적어주세요" />
+        </label>
+        <button className="btn btn-pine" disabled={!preview} onClick={submit}>게시하기</button>
+      </div>
+
+      <div className="gallery-feed-list">
+        {posts.length === 0 ? <p className="empty">아직 올린 사진이 없어요.</p> : (
+          [...posts].reverse().map((p) => (
+            <div className="gallery-post" key={p.id}>
+              <img src={p.src} alt={p.caption || "길갈라운지"} />
+              <div className="gallery-post-body">
+                {p.caption && <p>{p.caption}</p>}
+                <span className="muted small">{p.createdAt}</span>
+                <button className="icon-btn" onClick={() => onDelete(p.id)}><Trash2 size={15} /> 삭제</button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -618,7 +724,7 @@ function InquiryBoard({ inquiries, onAdd }) {
   );
 }
 
-function GuestPage({ reservations, onReserve, inquiries, onAddInquiry }) {
+function GuestPage({ reservations, onReserve, inquiries, onAddInquiry, galleryPosts }) {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState(4);
@@ -715,7 +821,7 @@ function GuestPage({ reservations, onReserve, inquiries, onAddInquiry }) {
         </div>
       </section>
 
-      <GallerySection />
+      <GallerySection posts={galleryPosts} />
 
       <NearbySection />
 
@@ -1222,6 +1328,7 @@ const ADMIN_TABS = [
   { id: "inventory", label: "비품 관리", icon: Boxes },
   { id: "costs", label: "비용 관리", icon: Receipt },
   { id: "inquiries", label: "문의 관리", icon: MessageCircle },
+  { id: "gallery", label: "모습 관리", icon: ImageIcon },
 ];
 
 // 관리자 접속 비밀번호. 원하는 값으로 바꾸고 싶으면 이 줄만 수정하면 돼요.
@@ -1293,6 +1400,7 @@ export default function App() {
   const [utilityBills, setUtilityBills] = useState(SEED_UTILITY_BILLS);
   const [maintenance, setMaintenance] = useState(SEED_MAINTENANCE);
   const [inquiries, setInquiries] = useState([]);
+  const [gallery, setGallery] = useState([]);
   const [loaded, setLoaded] = useState(false);
 
   // 관리자 인증이 풀리면(잠그면) 자동으로 예약자 화면으로 돌아가요.
@@ -1300,18 +1408,20 @@ export default function App() {
 
   useEffect(() => {
     (async () => {
-      const [r, i, u, m, q] = await Promise.all([storeGet("gg_reservations_v2"), storeGet("gg_inventory_v2"), storeGet("gg_utility_v2"), storeGet("gg_maint_v2"), storeGet("gg_inquiries_v1")]);
+      const [r, i, u, m, q, g] = await Promise.all([storeGet("gg_reservations_v2"), storeGet("gg_inventory_v2"), storeGet("gg_utility_v2"), storeGet("gg_maint_v2"), storeGet("gg_inquiries_v1"), storeGet("gg_gallery_v1")]);
       if (Array.isArray(r) && r.length) setReservations(r);
       if (Array.isArray(i) && i.length) setInventory(i);
       if (Array.isArray(u) && u.length) setUtilityBills(u);
       if (Array.isArray(m)) setMaintenance(m);
       if (Array.isArray(q)) setInquiries(q);
+      if (Array.isArray(g)) setGallery(g);
       setLoaded(true);
     })();
   }, []);
   useEffect(() => { if (loaded) storeSet("gg_reservations_v2", reservations); }, [reservations, loaded]);
   useEffect(() => { if (loaded) storeSet("gg_inventory_v2", inventory); }, [inventory, loaded]);
   useEffect(() => { if (loaded) storeSet("gg_inquiries_v1", inquiries); }, [inquiries, loaded]);
+  useEffect(() => { if (loaded) storeSet("gg_gallery_v1", gallery); }, [gallery, loaded]);
   useEffect(() => { if (loaded) storeSet("gg_utility_v2", utilityBills); }, [utilityBills, loaded]);
   useEffect(() => { if (loaded) storeSet("gg_maint_v2", maintenance); }, [maintenance, loaded]);
 
@@ -1357,6 +1467,8 @@ export default function App() {
   const addReservation = useCallback((r) => setReservations((prev) => [...prev, r]), []);
   const addInquiry = useCallback((q) => setInquiries((prev) => [...prev, q]), []);
   const answerInquiry = useCallback((id, answer) => setInquiries((prev) => prev.map((q) => (q.id === id ? { ...q, answer, answered: true } : q))), []);
+  const addGalleryPost = useCallback((p) => setGallery((prev) => [...prev, p]), []);
+  const deleteGalleryPost = useCallback((id) => setGallery((prev) => prev.filter((p) => p.id !== id)), []);
 
   return (
     <div className="app">
@@ -1397,12 +1509,13 @@ export default function App() {
       </header>
 
       <main>
-        {role === "guest" && <GuestPage reservations={reservations} onReserve={addReservation} inquiries={inquiries} onAddInquiry={addInquiry} />}
+        {role === "guest" && <GuestPage reservations={reservations} onReserve={addReservation} inquiries={inquiries} onAddInquiry={addInquiry} galleryPosts={gallery} />}
         {role === "admin" && adminAuthed && adminTab === "dashboard" && <AdminDashboard reservations={reservations} inventory={inventory} utilityBills={utilityBills} maintenance={maintenance} />}
         {role === "admin" && adminAuthed && adminTab === "reservations" && <AdminReservations reservations={reservations} setReservations={setReservations} />}
         {role === "admin" && adminAuthed && adminTab === "inventory" && <AdminInventory inventory={inventory} setInventory={setInventory} />}
         {role === "admin" && adminAuthed && adminTab === "costs" && <AdminCosts reservations={reservations} inventory={inventory} utilityBills={utilityBills} setUtilityBills={setUtilityBills} maintenance={maintenance} setMaintenance={setMaintenance} />}
         {role === "admin" && adminAuthed && adminTab === "inquiries" && <AdminInquiries inquiries={inquiries} onAnswer={answerInquiry} />}
+        {role === "admin" && adminAuthed && adminTab === "gallery" && <AdminGallery posts={gallery} onAdd={addGalleryPost} onDelete={deleteGalleryPost} />}
       </main>
     </div>
   );
@@ -1519,6 +1632,16 @@ a { text-decoration: none; }
 .gallery-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap:10px; }
 .gallery-item { border-radius:12px; overflow:hidden; aspect-ratio: 3/4; }
 .gallery-item img { width:100%; height:100%; object-fit:cover; display:block; }
+
+.gallery-feed { margin-top:36px; }
+.gallery-feed-title { text-align:center; font-weight:800; font-size:14px; color: var(--stone); margin-bottom:16px; }
+.gallery-feed-list { display:flex; flex-direction:column; gap:18px; }
+.gallery-post { background:var(--surface); border:1px solid var(--line); border-radius:18px; overflow:hidden; }
+.gallery-post img { width:100%; max-height:420px; object-fit:cover; display:block; }
+.gallery-post-body { padding:14px 16px; display:flex; flex-direction:column; gap:6px; }
+.gallery-post-body p { font-size:14px; line-height:1.6; color:#4B4732; margin:0; }
+.gallery-preview { width:100%; max-height:260px; object-fit:cover; border-radius:12px; margin-top:10px; }
+.file-input { font-size:13px; }
 
 /* ---- calendar ---- */
 .cal-wrap { max-width:900px; margin:0 auto 28px; }
@@ -1654,5 +1777,53 @@ a { text-decoration: none; }
   .two-col { grid-template-columns: 1fr; }
   .admin-tabs { width:100%; justify-content:flex-start; }
   .cal-months { grid-template-columns: 1fr; }
+}
+
+/* ---- 전체적으로 더 부드러운 느낌으로 다듬기 ---- */
+* { -webkit-tap-highlight-color: transparent; }
+body, .app { -webkit-font-smoothing: antialiased; }
+h1, h2, h3, h4 { letter-spacing: -0.01em; }
+p, .card-desc, .space-desc, .nearby-desc, .board-msg, .gallery-post-body p { line-height: 1.7; }
+
+button, .btn, a, .toplink, .mode-btn, .pill, input, select, textarea {
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .15s ease;
+}
+
+.btn { border-radius: 14px; }
+.space-visual, .gallery-item, .card-img, .detail-hero, .exterior-banner { border-radius: 22px; }
+.hero { border-radius: 0 0 36px 36px; }
+
+.nearby-card, .inv-card, .panel, .stat-card, .board-item, .gallery-post,
+.host-row, .booking-row, .card, .detail-confirm, .confirm-wrap, .lookup-box input,
+.board-form, .cal-month, .table-wrap, .admin-gate-box, .tide-box, .bank-note {
+  border-radius: 18px;
+}
+
+.nearby-card, .inv-card, .panel, .stat-card, .board-item, .gallery-post, .cal-month, .tide-box {
+  box-shadow: 0 2px 16px rgba(60, 50, 30, 0.05);
+}
+.nearby-card, .inv-card {
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.nearby-card:hover, .inv-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(60, 50, 30, 0.1);
+}
+
+.field input:focus, .field select:focus, .field textarea:focus,
+.lookup-box input:focus, .board-form input:focus, .board-form textarea:focus,
+.inline-add input:focus, .inline-add select:focus {
+  outline: none;
+  border-color: var(--terra);
+  box-shadow: 0 0 0 4px rgba(181, 87, 58, 0.12);
+}
+
+.mini-btn, .pill, .amenity-tag, .feature-chip, .nearby-badge, .badge {
+  border-radius: 999px;
+}
+
+.topbar {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 `;
