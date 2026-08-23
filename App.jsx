@@ -355,8 +355,8 @@ const won = (n) => Math.round(n).toLocaleString("ko-KR") + "원";
 
 // 백엔드(서버) 주소와 관리자 키. Render 등에 배포한 뒤 이 두 값을 채워 넣으면
 // 예약·사진 데이터가 모든 기기에서 함께 보이고, 사장님 이메일로 자동 알림도 갑니다. (README 참고)
-const BACKEND_URL = ""; // 예: "https://gilgal-backend.onrender.com"
-const BACKEND_ADMIN_KEY = ""; // 백엔드 .env의 ADMIN_KEY와 반드시 같은 값으로 넣어주세요.
+const BACKEND_URL = "https://gilgal-backend.onrender.com";
+const BACKEND_ADMIN_KEY = "gilgal2026key"; // 백엔드 .env의 ADMIN_KEY와 반드시 같은 값으로 넣어주세요.
 
 async function apiPost(path, body) {
   if (!BACKEND_URL) return null;
