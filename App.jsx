@@ -353,22 +353,82 @@ function resizeImageFile(file, maxWidth = 720, quality = 0.6) {
 }
 const won = (n) => Math.round(n).toLocaleString("ko-KR") + "원";
 
-// 예약 알림 백엔드 주소. Render 등에 배포한 뒤 이 값을 채워 넣으면
-// 예약이 들어올 때마다 사장님 이메일로 자동 알림이 갑니다. (README 참고)
+// 백엔드(서버) 주소와 관리자 키. Render 등에 배포한 뒤 이 두 값을 채워 넣으면
+// 예약·사진 데이터가 모든 기기에서 함께 보이고, 사장님 이메일로 자동 알림도 갑니다. (README 참고)
 const BACKEND_URL = ""; // 예: "https://gilgal-backend.onrender.com"
+const BACKEND_ADMIN_KEY = ""; // 백엔드 .env의 ADMIN_KEY와 반드시 같은 값으로 넣어주세요.
 
-async function notifyBackend(reservation) {
-  if (!BACKEND_URL) return; // 아직 배포 전이면 조용히 건너뜀
+async function apiPost(path, body) {
+  if (!BACKEND_URL) return null;
   try {
-    await fetch(`${BACKEND_URL}/api/reservations`, {
+    const res = await fetch(`${BACKEND_URL}${path}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(reservation),
+      body: JSON.stringify(body),
     });
+    return await res.json();
   } catch (e) {
-    // 네트워크 오류가 나도 예약 자체(로컬 저장)는 정상 진행되도록 조용히 무시
-    console.warn("백엔드 알림 전송 실패:", e);
+    console.warn("백엔드 요청 실패:", path, e);
+    return null;
   }
+}
+async function apiGet(path) {
+  if (!BACKEND_URL) return null;
+  try {
+    const res = await fetch(`${BACKEND_URL}${path}`);
+    return await res.json();
+  } catch (e) {
+    console.warn("백엔드 요청 실패:", path, e);
+    return null;
+  }
+}
+async function apiPatch(path, body) {
+  if (!BACKEND_URL) return null;
+  try {
+    const res = await fetch(`${BACKEND_URL}${path}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    return await res.json();
+  } catch (e) {
+    console.warn("백엔드 요청 실패:", path, e);
+    return null;
+  }
+}
+async function apiDelete(path) {
+  if (!BACKEND_URL) return null;
+  try {
+    const res = await fetch(`${BACKEND_URL}${path}`, { method: "DELETE" });
+    return await res.json();
+  } catch (e) {
+    console.warn("백엔드 요청 실패:", path, e);
+    return null;
+  }
+}
+
+async function notifyBackend(reservation) {
+  return apiPost("/api/reservations", reservation);
+}
+async function fetchAdminReservations() {
+  const data = await apiGet(`/api/reservations?key=${encodeURIComponent(BACKEND_ADMIN_KEY)}`);
+  return data && data.ok ? data.reservations : null;
+}
+async function patchReservation(id, patch) {
+  return apiPatch(`/api/reservations/${id}?key=${encodeURIComponent(BACKEND_ADMIN_KEY)}`, patch);
+}
+async function deleteReservationBackend(id) {
+  return apiDelete(`/api/reservations/${id}?key=${encodeURIComponent(BACKEND_ADMIN_KEY)}`);
+}
+async function fetchGalleryBackend() {
+  const data = await apiGet("/api/gallery");
+  return data && data.ok ? data.posts : null;
+}
+async function postGalleryBackend(post) {
+  return apiPost(`/api/gallery?key=${encodeURIComponent(BACKEND_ADMIN_KEY)}`, post);
+}
+async function deleteGalleryBackend(id) {
+  return apiDelete(`/api/gallery/${id}?key=${encodeURIComponent(BACKEND_ADMIN_KEY)}`);
 }
 
 function dateRange(checkIn, checkOut) {
@@ -1032,8 +1092,14 @@ function AdminDashboard({ reservations, inventory, utilityBills, maintenance }) 
 }
 
 function AdminReservations({ reservations, setReservations }) {
-  const setStatus = (id, status) => setReservations((prev) => prev.map((r) => (r.id === id ? { ...r, status } : r)));
-  const remove = (id) => setReservations((prev) => prev.filter((r) => r.id !== id));
+  const setStatus = (id, status) => {
+    setReservations((prev) => prev.map((r) => (r.id === id ? { ...r, status } : r)));
+    if (BACKEND_URL) patchReservation(id, { status });
+  };
+  const remove = (id) => {
+    setReservations((prev) => prev.filter((r) => r.id !== id));
+    if (BACKEND_URL) deleteReservationBackend(id);
+  };
   const sorted = [...reservations].sort((a, b) => b.checkIn.localeCompare(a.checkIn));
 
   return (
@@ -1534,6 +1600,14 @@ export default function App() {
       if (Array.isArray(m)) setMaintenance(m);
       if (Array.isArray(q)) setInquiries(q);
       if (Array.isArray(g)) setGallery(g);
+
+      // 백엔드가 연결돼 있으면 서버 데이터를 기준으로 덮어써서 모든 기기가 같은 내용을 봅니다.
+      if (BACKEND_URL) {
+        const [backendReservations, backendGallery] = await Promise.all([fetchAdminReservations(), fetchGalleryBackend()]);
+        if (Array.isArray(backendReservations)) setReservations(backendReservations);
+        if (Array.isArray(backendGallery)) setGallery(backendGallery);
+      }
+
       setLoaded(true);
     })();
   }, []);
@@ -1561,7 +1635,7 @@ export default function App() {
       seenIds.current = new Set(reservations.map((r) => r.id));
     }
     const interval = setInterval(async () => {
-      const latest = await storeGet("gg_reservations_v2");
+      const latest = BACKEND_URL ? await fetchAdminReservations() : await storeGet("gg_reservations_v2");
       if (!Array.isArray(latest)) return;
       const newOnes = latest.filter((r) => !seenIds.current.has(r.id));
       if (newOnes.length) {
@@ -1593,8 +1667,20 @@ export default function App() {
   const addReservation = useCallback((r) => setReservations((prev) => [...prev, r]), []);
   const addInquiry = useCallback((q) => setInquiries((prev) => [...prev, q]), []);
   const answerInquiry = useCallback((id, answer) => setInquiries((prev) => prev.map((q) => (q.id === id ? { ...q, answer, answered: true } : q))), []);
-  const addGalleryPost = useCallback((p) => setGallery((prev) => [...prev, p]), []);
-  const deleteGalleryPost = useCallback((id) => setGallery((prev) => prev.filter((p) => p.id !== id)), []);
+  const addGalleryPost = useCallback(async (p) => {
+    if (BACKEND_URL) {
+      const result = await postGalleryBackend(p);
+      if (result && result.ok) {
+        setGallery((prev) => [...prev, result.post]);
+        return;
+      }
+    }
+    setGallery((prev) => [...prev, p]);
+  }, []);
+  const deleteGalleryPost = useCallback(async (id) => {
+    if (BACKEND_URL) await deleteGalleryBackend(id);
+    setGallery((prev) => prev.filter((p) => p.id !== id));
+  }, []);
 
   return (
     <div className="app">
