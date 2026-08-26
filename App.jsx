@@ -1708,6 +1708,8 @@ export default function App() {
         setGallery((prev) => [...prev, result.post]);
         return;
       }
+      alert((result && result.error) || "서버에 사진 저장을 실패했어요. 잠시 후 다시 시도해주세요.");
+      return;
     }
     setGallery((prev) => [...prev, p]);
   }, []);
