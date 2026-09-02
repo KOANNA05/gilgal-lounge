@@ -696,7 +696,13 @@ function AdminGallery({ posts, onAdd, onDelete }) {
   );
 }
 
-function BookingCalendar({ reservations }) {
+function BookingCalendar({ reservations, checkIn, checkOut, onPick }) {
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const [view, setView] = useState(() => {
+    const n = new Date();
+    return { year: n.getFullYear(), month: n.getMonth() };
+  });
+
   const bookedDates = useMemo(() => {
     const set = new Set();
     reservations.forEach((r) => {
@@ -708,42 +714,59 @@ function BookingCalendar({ reservations }) {
     return set;
   }, [reservations]);
 
-  const months = useMemo(() => {
-    const now = new Date();
-    return [0, 1].map((offset) => {
-      const first = new Date(now.getFullYear(), now.getMonth() + offset, 1);
-      const year = first.getFullYear();
-      const month = first.getMonth();
-      const daysInMonth = new Date(year, month + 1, 0).getDate();
-      const startWeekday = first.getDay();
-      const cells = [];
-      for (let i = 0; i < startWeekday; i++) cells.push(null);
-      for (let d = 1; d <= daysInMonth; d++) {
-        const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
-        cells.push({ day: d, dateStr, booked: bookedDates.has(dateStr) });
-      }
-      return { label: `${year}년 ${month + 1}월`, cells };
-    });
-  }, [bookedDates]);
+  const cells = useMemo(() => {
+    const { year, month } = view;
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const startWeekday = new Date(year, month, 1).getDay();
+    const arr = [];
+    for (let i = 0; i < startWeekday; i++) arr.push(null);
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+      arr.push({ day: d, dateStr, booked: bookedDates.has(dateStr), past: dateStr < todayStr });
+    }
+    return arr;
+  }, [view, bookedDates, todayStr]);
+
+  const goPrevMonth = () => setView((v) => (v.month === 0 ? { year: v.year - 1, month: 11 } : { year: v.year, month: v.month - 1 }));
+  const goNextMonth = () => setView((v) => (v.month === 11 ? { year: v.year + 1, month: 0 } : { year: v.year, month: v.month + 1 }));
+  const goPrevYear = () => setView((v) => ({ ...v, year: v.year - 1 }));
+  const goNextYear = () => setView((v) => ({ ...v, year: v.year + 1 }));
+
+  const isEndpoint = (dateStr) => dateStr === checkIn || dateStr === checkOut;
+  const inRange = (dateStr) => checkIn && checkOut && dateStr > checkIn && dateStr < checkOut;
 
   return (
     <div className="cal-wrap">
-      <div className="cal-legend"><span className="cal-dot cal-dot-booked" /> 예약중 &nbsp; <span className="cal-dot cal-dot-free" /> 예약 가능</div>
-      <div className="cal-months">
-        {months.map((m) => (
-          <div className="cal-month" key={m.label}>
-            <p className="cal-month-title">{m.label}</p>
-            <div className="cal-weekdays">{["일", "월", "화", "수", "목", "금", "토"].map((w) => <span key={w}>{w}</span>)}</div>
-            <div className="cal-grid">
-              {m.cells.map((c, i) => (
-                <span key={i} className={`cal-cell ${c ? (c.booked ? "cal-cell-booked" : "cal-cell-free") : ""}`}>
-                  {c ? c.day : ""}
-                </span>
-              ))}
-            </div>
-          </div>
-        ))}
+      <div className="cal-legend">
+        <span className="cal-dot cal-dot-booked" /> 예약중 &nbsp; <span className="cal-dot cal-dot-free" /> 예약 가능 &nbsp; <span className="cal-dot cal-dot-selected" /> 선택됨
       </div>
+      <div className="cal-nav">
+        <button type="button" className="cal-nav-btn" onClick={goPrevYear} aria-label="이전 연도">«</button>
+        <button type="button" className="cal-nav-btn" onClick={goPrevMonth} aria-label="이전 달">‹</button>
+        <span className="cal-nav-label">{view.year}년 {view.month + 1}월</span>
+        <button type="button" className="cal-nav-btn" onClick={goNextMonth} aria-label="다음 달">›</button>
+        <button type="button" className="cal-nav-btn" onClick={goNextYear} aria-label="다음 연도">»</button>
+      </div>
+      <div className="cal-month cal-month-single">
+        <div className="cal-weekdays">{["일", "월", "화", "수", "목", "금", "토"].map((w) => <span key={w}>{w}</span>)}</div>
+        <div className="cal-grid">
+          {cells.map((c, i) => {
+            if (!c) return <span key={i} className="cal-cell cal-cell-empty" />;
+            const disabled = c.booked || c.past;
+            const cls = ["cal-cell", "cal-cell-btn"];
+            if (disabled) cls.push(c.booked ? "cal-cell-booked" : "cal-cell-past");
+            else cls.push("cal-cell-free");
+            if (isEndpoint(c.dateStr)) cls.push("cal-cell-selected");
+            else if (inRange(c.dateStr)) cls.push("cal-cell-inrange");
+            return (
+              <button key={i} type="button" className={cls.join(" ")} disabled={disabled} onClick={() => onPick(c.dateStr)}>
+                {c.day}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+      <p className="cal-hint">날짜를 눌러 체크인 → 체크아웃 순서로 선택해주세요.</p>
     </div>
   );
 }
@@ -847,6 +870,23 @@ function GuestPage({ reservations, onReserve, inquiries, onAddInquiry, galleryPo
 
   const valid = checkIn && checkOut && nights > 0 && guestName.trim() && phone.trim() && guests <= MAX_GUESTS && !overlap;
 
+  const handleCalendarPick = (dateStr) => {
+    if (dateStr === checkIn && !checkOut) {
+      setCheckIn("");
+      return;
+    }
+    if (!checkIn || checkOut) {
+      setCheckIn(dateStr);
+      setCheckOut("");
+      return;
+    }
+    if (dateStr <= checkIn) {
+      setCheckIn(dateStr);
+    } else {
+      setCheckOut(dateStr);
+    }
+  };
+
   if (done) {
     return (
       <div className="confirm-wrap">
@@ -931,7 +971,7 @@ function GuestPage({ reservations, onReserve, inquiries, onAddInquiry, galleryPo
           <p className="rate-note">평일 {won(BASE_WEEKDAY)} · 금·토·일·공휴일 {won(BASE_WEEKEND)} (1박 기준, 최대 {MAX_GUESTS}인) · 한 번에 한 팀만 예약 가능합니다</p>
         </div>
 
-        <BookingCalendar reservations={reservations} />
+        <BookingCalendar reservations={reservations} checkIn={checkIn} checkOut={checkOut} onPick={handleCalendarPick} />
 
         <div className="book-grid">
           <div className="book-form">
@@ -1895,19 +1935,30 @@ a { text-decoration: none; }
 .file-input { font-size:13px; }
 
 /* ---- calendar ---- */
-.cal-wrap { max-width:900px; margin:0 auto 28px; }
-.cal-legend { display:flex; align-items:center; gap:6px; font-size:12.5px; color:#6E6850; margin-bottom:12px; justify-content:center; }
+.cal-wrap { max-width:520px; margin:0 auto 28px; }
+.cal-legend { display:flex; align-items:center; gap:6px; font-size:12.5px; color:#6E6850; margin-bottom:14px; justify-content:center; flex-wrap:wrap; }
 .cal-dot { display:inline-block; width:10px; height:10px; border-radius:50%; }
 .cal-dot-booked { background: var(--terra); }
 .cal-dot-free { background: var(--line); }
-.cal-months { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-.cal-month { background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:14px; }
-.cal-month-title { text-align:center; font-weight:800; font-size:13.5px; margin-bottom:8px; }
-.cal-weekdays { display:grid; grid-template-columns:repeat(7,1fr); font-size:10.5px; color:#8A8368; text-align:center; margin-bottom:4px; }
-.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; }
-.cal-cell { display:flex; align-items:center; justify-content:center; aspect-ratio:1; font-size:11.5px; border-radius:6px; color:#6E6850; }
+.cal-dot-selected { background: var(--moss-dark, #4B6152); }
+.cal-nav { display:flex; align-items:center; justify-content:center; gap:6px; margin-bottom:12px; }
+.cal-nav-btn { width:32px; height:32px; border-radius:10px; border:1px solid var(--line); background:var(--surface); color:var(--ink); font-size:15px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+.cal-nav-btn:active { transform: scale(0.94); }
+.cal-nav-label { min-width:110px; text-align:center; font-weight:800; font-size:15px; }
+.cal-month { background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px; }
+.cal-weekdays { display:grid; grid-template-columns:repeat(7,1fr); font-size:11px; color:#8A8368; text-align:center; margin-bottom:6px; }
+.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:5px; }
+.cal-cell { display:flex; align-items:center; justify-content:center; aspect-ratio:1; font-size:13px; border-radius:8px; color:#6E6850; }
+.cal-cell-empty { background:transparent; }
+.cal-cell-btn { border:none; cursor:pointer; font-family:inherit; }
+.cal-cell-btn:disabled { cursor:not-allowed; }
 .cal-cell-free { background:#F1ECDB; }
-.cal-cell-booked { background: var(--terra); color:#fff; font-weight:700; }
+.cal-cell-free:hover { background:#E7DFC5; }
+.cal-cell-booked { background: var(--terra); color:#fff; font-weight:700; opacity:0.85; }
+.cal-cell-past { background:transparent; color:#C9C2AA; }
+.cal-cell-selected { background: var(--moss-dark, #4B6152); color:#fff; font-weight:800; }
+.cal-cell-inrange { background:#DCE3D2; color:#3F4A38; font-weight:700; }
+.cal-hint { text-align:center; font-size:12px; color:#8A8368; margin-top:10px; }
 
 /* ---- checkboxes ---- */
 .checkbox-row { display:flex; flex-direction:column; gap:8px; margin-bottom:14px; }
@@ -2027,7 +2078,7 @@ a { text-decoration: none; }
   .stat-row { grid-template-columns: 1fr 1fr; }
   .two-col { grid-template-columns: 1fr; }
   .admin-tabs { width:100%; justify-content:flex-start; }
-  .cal-months { grid-template-columns: 1fr; }
+  .cal-nav-btn { width:36px; height:36px; }
 }
 
 /* ---- 전체적으로 더 부드러운 느낌으로 다듬기 ---- */
