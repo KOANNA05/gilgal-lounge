@@ -910,7 +910,6 @@ function GuestPage({ reservations, onReserve, inquiries, onAddInquiry, galleryPo
       <section className="hero">
         <div className="hero-circle"><StoneCircle size={220} tone="#E7C6A9" /></div>
         <div className="hero-inner">
-          <div className="brandmark"><StoneCircle size={26} /> GILGAL LOUNGE</div>
           <img className="plaque-img" src={PLAQUE_PHOTO} alt="길갈라운지 명패" />
           <p className="hero-desc">
             이스라엘 백성이 광야를 지나 길갈에 머물며 새로운 삶을 준비했듯, 이곳에 머무는 사람들이 일상의 짐을 내려놓고 하나님 안에서 새 힘을 얻었으면 좋겠습니다.
@@ -1861,7 +1860,8 @@ a { text-decoration: none; }
 .hero-inner { position:relative; z-index:2; max-width:640px; margin:0 auto; text-align:center; }
 .brandmark { display:inline-flex; align-items:center; gap:8px; font-weight:800; font-size:14px; color: var(--terra); background: rgba(255,255,255,0.08); padding:6px 14px; border-radius:999px; margin-bottom:18px; }
 .plaque-img { display:block; max-width:340px; width:100%; margin:0 auto 22px; border-radius:10px; box-shadow:0 14px 34px rgba(0,0,0,0.35); }
-.eyebrow { text-transform:uppercase; letter-spacing:0.14em; font-size:11.5px; font-weight:700; color:#D8A98C; margin:0 0 8px; }
+.eyebrow { display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:700; color: var(--terra-dark); margin:0; }
+.eyebrow::before { content:""; display:inline-block; width:6px; height:6px; border-radius:50%; background: var(--terra); box-shadow: 10px 0 0 -1px var(--stone), 18px 1px 0 -1.5px var(--moss); }
 .hero-inner h1 { font-size:36px; line-height:1.32; margin-bottom:16px; }
 .hero-desc { font-size:14.5px; line-height:1.7; color:#D8CFB8; margin-bottom:26px; }
 .addr-note { display:flex; align-items:center; justify-content:center; gap:5px; font-size:12.5px; color:#D8A98C; margin-top:16px; }
@@ -1877,9 +1877,8 @@ a { text-decoration: none; }
 /* ---- spaces ---- */
 .spaces { max-width: 980px; margin:0 auto; padding: 64px 26px; }
 .section-head { display:flex; align-items:baseline; justify-content:space-between; margin-bottom: 18px; }
-.section-head.narrow, .section-head.narrow * { text-align:center; }
-.section-head.narrow { flex-direction:column; align-items:center; margin-bottom:36px; }
-.section-head.narrow h2 { font-size:26px; margin-top:4px; }
+.section-head.narrow { flex-direction:column; align-items:flex-start; margin-bottom:34px; text-align:left; }
+.section-head.narrow h2 { font-size:25px; margin-top:6px; max-width:22ch; }
 .rate-note { font-size:12.5px; color:#8A8368; margin-top:8px; }
 
 .exterior-banner { position:relative; border-radius:18px; overflow:hidden; margin-bottom:40px; aspect-ratio: 16 / 9; }
@@ -2081,7 +2080,7 @@ a { text-decoration: none; }
   .cal-nav-btn { width:36px; height:36px; }
 }
 
-/* ---- 전체적으로 더 부드러운 느낌으로 다듬기 ---- */
+/* ---- 마무리 다듬기 ---- */
 * { -webkit-tap-highlight-color: transparent; }
 body, .app { -webkit-font-smoothing: antialiased; }
 h1, h2, h3, h4 { letter-spacing: -0.01em; }
@@ -2091,25 +2090,32 @@ button, .btn, a, .toplink, .mode-btn, .pill, input, select, textarea {
   transition: background-color .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .15s ease;
 }
 
-.btn { border-radius: 14px; }
-.space-visual, .gallery-item, .card-img, .detail-hero, .exterior-banner { border-radius: 22px; }
-.hero { border-radius: 0 0 36px 36px; }
+.btn { border-radius: 10px; }
+.space-visual, .gallery-item, .card-img, .detail-hero, .exterior-banner { border-radius: 24px; }
+.hero { border-radius: 0 0 40px 40px; }
 
-.nearby-card, .inv-card, .panel, .stat-card, .board-item, .gallery-post,
-.host-row, .booking-row, .card, .detail-confirm, .confirm-wrap, .lookup-box input,
-.board-form, .cal-month, .table-wrap, .admin-gate-box, .tide-box, .bank-note {
-  border-radius: 18px;
-}
-
-.nearby-card, .inv-card, .panel, .stat-card, .board-item, .gallery-post, .cal-month, .tide-box {
-  box-shadow: 0 2px 16px rgba(60, 50, 30, 0.05);
-}
+/* 손님이 고르는 카드(관광지·비품)는 살짝 떠 있는 느낌, 나머지 패널은 평평하게 구분 */
 .nearby-card, .inv-card {
+  border-radius: 16px;
+  box-shadow: 0 2px 14px rgba(60, 50, 30, 0.06);
   transition: transform .2s ease, box-shadow .2s ease;
 }
 .nearby-card:hover, .inv-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 28px rgba(60, 50, 30, 0.1);
+  box-shadow: 0 12px 26px rgba(60, 50, 30, 0.1);
+}
+
+.panel, .board-item, .gallery-post, .confirm-wrap, .board-form, .bank-note, .admin-gate-box, .tide-box {
+  border-radius: 14px;
+  box-shadow: none;
+}
+.host-row, .booking-row, .stat-card, .lookup-box input {
+  border-radius: 10px;
+  box-shadow: none;
+}
+.table-wrap, .cal-month {
+  border-radius: 10px;
+  box-shadow: none;
 }
 
 .field input:focus, .field select:focus, .field textarea:focus,
