@@ -121,16 +121,21 @@ const SEED_INVENTORY = [
     { date: "2025-10-03", qty: 1, cost: 468510, vendor: "쿠팡 · 삼성전자 WA16CG6441BY" },
     { date: "2025-10-03", qty: 1, cost: 6000, vendor: "쿠팡 · 안심케어 5년 무상보증" },
   ], issueHistory: [] },
-  { id: "i2", category: "가전·가구", name: "냉장고 (LG)", unit: "대", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-08-01", purchaseHistory: [], issueHistory: [] },
+  { id: "i2", category: "가전·가구", name: "냉장고 (LG전자 일반형, B502W33)", unit: "대", quantity: 1, minThreshold: 1, lastCheckedAt: "2025-10-01", purchaseHistory: [
+    { date: "2025-10-01", qty: 1, cost: 602080, vendor: "쿠팡 · LG전자 일반형냉장고 507L" },
+  ], issueHistory: [] },
   { id: "i3", category: "가전·가구", name: "TV + 미러링 동글", unit: "대", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-07-11", purchaseHistory: [
     { date: "2025-10-02", qty: 1, cost: 308880, vendor: "쿠팡 · 위드라이프 55인치 4K UHD" },
     { date: "2026-02-13", qty: 1, cost: 35260, vendor: "쿠팡 · 유니콘 무선 4K 미러링 동글" },
     { date: "2026-07-11", qty: 1, cost: 25000, vendor: "당근마켓 · 구글 크롬캐스트 3세대" },
   ], issueHistory: [] },
-  { id: "i30", category: "가전·가구", name: "에어컨 (삼성 벽걸이 AR09R5173HC)", unit: "대", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-07-07", purchaseHistory: [
+  { id: "i30", category: "가전·가구", name: "에어컨 (삼성 벽걸이 AR09R5173HC)", unit: "대", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-07-17", purchaseHistory: [
     { date: "2026-07-07", qty: 1, cost: 300000, vendor: "당근마켓 · 삼성전자" },
+    { date: "2026-07-17", qty: 1, cost: 180000, vendor: "설치비" },
   ], issueHistory: [] },
-  { id: "i4", category: "가전·가구", name: "인덕션", unit: "대", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-08-01", purchaseHistory: [], issueHistory: [] },
+  { id: "i4", category: "가전·가구", name: "인덕션 (SK매직 3구, 화이트)", unit: "대", quantity: 1, minThreshold: 1, lastCheckedAt: "2025-09-27", purchaseHistory: [
+    { date: "2025-09-27", qty: 1, cost: 419000, vendor: "네이버 스마트스토어 · 나비엔 브랜드 공식스토어(SK매직)" },
+  ], issueHistory: [] },
   { id: "i31", category: "가전·가구", name: "전기스토브 (한경희)", unit: "대", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-02-13", purchaseHistory: [
     { date: "2026-02-13", qty: 1, cost: 5000, vendor: "당근마켓 · 한경희생활과학 HAAN-RT100" },
   ], issueHistory: [] },
@@ -965,7 +970,7 @@ function GuestPage({ reservations, onReserve, inquiries, onAddInquiry, galleryPo
 
       <section className="book-section" id="book">
         <div className="section-head narrow">
-          <p className="eyebrow">예약하기</p>
+          <p className="eyebrow">예약하기 · 셀프체크인</p>
           <h2>길갈라운지에서 하룻밤</h2>
           <p className="rate-note">평일 {won(BASE_WEEKDAY)} · 금·토·일·공휴일 {won(BASE_WEEKEND)} (1박 기준, 최대 {MAX_GUESTS}인) · 한 번에 한 팀만 예약 가능합니다</p>
         </div>
