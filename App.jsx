@@ -5,7 +5,7 @@ import {
   TrendingUp, TrendingDown, Wallet, ClipboardList, Plus, Trash2,
   ChevronLeft, ChevronDown, Check, X, LayoutDashboard, Boxes, Receipt,
   CalendarCheck, Users, Phone, MapPin, CircleDot, Sofa, Thermometer,
-  CalendarDays, ClipboardCheck, Bell, BellOff, Waves, ExternalLink, MessageCircle,
+  CalendarDays, ClipboardCheck, Bell, BellOff, Waves, ExternalLink, MessageCircle, Pencil,
   Image as ImageIcon,
 } from "lucide-react";
 import {
@@ -1192,12 +1192,36 @@ function AdminInventory({ inventory, setInventory }) {
   const [issueFor, setIssueFor] = useState(null);
   const [view, setView] = useState("table");
   const [newItem, setNewItem] = useState({ category: INVENTORY_CATEGORIES[0], name: "", unit: "개", quantity: 0, minThreshold: 1 });
+  const [editingId, setEditingId] = useState(null);
+  const [editDraft, setEditDraft] = useState(null);
+  const [addHistoryFor, setAddHistoryFor] = useState(null);
+  const [historyDraft, setHistoryDraft] = useState({ date: "", qty: 1, cost: 0, vendor: "" });
+  const [editingHistory, setEditingHistory] = useState(null); // `${itemId}:${index}`
 
   const adjust = (id, delta) => setInventory((prev) => prev.map((i) => (i.id === id ? { ...i, quantity: Math.max(0, i.quantity + delta) } : i)));
   const checkOff = (id) => setInventory((prev) => prev.map((i) => (i.id === id ? { ...i, lastCheckedAt: new Date().toISOString().slice(0, 10) } : i)));
   const remove = (id) => setInventory((prev) => prev.filter((i) => i.id !== id));
 
   const addIssue = (id, issue) => setInventory((prev) => prev.map((i) => (i.id === id ? { ...i, issueHistory: [issue, ...i.issueHistory] } : i)));
+
+  const startEdit = (item) => { setEditingId(item.id); setEditDraft({ category: item.category, name: item.name, unit: item.unit, quantity: item.quantity, minThreshold: item.minThreshold }); setView("card"); };
+  const cancelEdit = () => { setEditingId(null); setEditDraft(null); };
+  const saveEdit = (id) => {
+    setInventory((prev) => prev.map((i) => (i.id === id ? { ...i, ...editDraft, quantity: Number(editDraft.quantity) || 0, minThreshold: Number(editDraft.minThreshold) || 0 } : i)));
+    cancelEdit();
+  };
+
+  const submitNewHistory = (id) => {
+    if (!historyDraft.date) return;
+    setInventory((prev) => prev.map((i) => (i.id === id ? { ...i, purchaseHistory: [...i.purchaseHistory, { date: historyDraft.date, qty: Number(historyDraft.qty) || 1, cost: Number(historyDraft.cost) || 0, vendor: historyDraft.vendor }] } : i)));
+    setAddHistoryFor(null);
+    setHistoryDraft({ date: "", qty: 1, cost: 0, vendor: "" });
+  };
+  const deleteHistoryEntry = (id, idx) => setInventory((prev) => prev.map((i) => (i.id === id ? { ...i, purchaseHistory: i.purchaseHistory.filter((_, ix) => ix !== idx) } : i)));
+  const saveHistoryEdit = (id, idx, patch) => {
+    setInventory((prev) => prev.map((i) => (i.id === id ? { ...i, purchaseHistory: i.purchaseHistory.map((p, ix) => (ix === idx ? { ...p, ...patch, qty: Number(patch.qty) || 0, cost: Number(patch.cost) || 0 } : p)) } : i)));
+    setEditingHistory(null);
+  };
 
   const byCategory = INVENTORY_CATEGORIES.map((c) => ({ category: c, items: inventory.filter((i) => i.category === c) })).filter((g) => g.items.length);
   const sortedFlat = [...inventory].sort((a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name));
@@ -1274,6 +1298,7 @@ function AdminInventory({ inventory, setInventory }) {
                     <td className="muted small">{item.lastCheckedAt}</td>
                     <td className="muted small">{lp ? `${lp.date} · ${won(lp.cost)}${lp.vendor ? ` · ${lp.vendor}` : ""}` : "-"}</td>
                     <td>
+                      <button className="icon-btn" onClick={() => startEdit(item)} title="수정"><Pencil size={14} /></button>
                       <button className="icon-btn" onClick={() => adjust(item.id, -1)} title="사용"><PackageMinus size={14} /></button>
                       <button className="icon-btn" onClick={() => adjust(item.id, 1)} title="입고"><PackagePlus size={14} /></button>
                       <button className="icon-btn" onClick={() => remove(item.id)} title="삭제"><Trash2 size={14} /></button>
@@ -1292,38 +1317,107 @@ function AdminInventory({ inventory, setInventory }) {
           <div className="inv-list">
             {group.items.map((item) => {
               const low = item.quantity <= item.minThreshold;
+              const isEditing = editingId === item.id;
               return (
                 <div className="inv-card" key={item.id}>
-                  <div className="inv-top">
-                    <div>
-                      <h4>{item.name}</h4>
-                      <span className={`qty-badge ${low ? "qty-low" : ""}`}>{item.quantity}{item.unit} 보유 · 최소 {item.minThreshold}{item.unit}</span>
+                  {isEditing ? (
+                    <div className="inv-edit-form">
+                      <div className="form-row">
+                        <label className="field">카테고리
+                          <select value={editDraft.category} onChange={(e) => setEditDraft({ ...editDraft, category: e.target.value })}>
+                            {INVENTORY_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+                          </select>
+                        </label>
+                        <label className="field">품목명
+                          <input value={editDraft.name} onChange={(e) => setEditDraft({ ...editDraft, name: e.target.value })} />
+                        </label>
+                      </div>
+                      <div className="form-row">
+                        <label className="field">단위
+                          <input value={editDraft.unit} onChange={(e) => setEditDraft({ ...editDraft, unit: e.target.value })} />
+                        </label>
+                        <label className="field">현재 수량
+                          <input type="number" value={editDraft.quantity} onChange={(e) => setEditDraft({ ...editDraft, quantity: e.target.value })} />
+                        </label>
+                        <label className="field">최소 수량
+                          <input type="number" value={editDraft.minThreshold} onChange={(e) => setEditDraft({ ...editDraft, minThreshold: e.target.value })} />
+                        </label>
+                      </div>
+                      <div className="inv-actions">
+                        <button className="btn btn-pine" onClick={() => saveEdit(item.id)}>저장</button>
+                        <button className="mini-btn" onClick={cancelEdit}>취소</button>
+                      </div>
                     </div>
-                    <button className="icon-btn" onClick={() => remove(item.id)}><Trash2 size={15} /></button>
-                  </div>
-                  <div className="inv-actions">
-                    <button className="mini-btn" onClick={() => adjust(item.id, -1)}><PackageMinus size={13} /> 사용</button>
-                    <button className="mini-btn" onClick={() => adjust(item.id, 1)}><PackagePlus size={13} /> 입고</button>
-                    <button className="mini-btn" onClick={() => checkOff(item.id)}><ClipboardCheck size={13} /> 점검완료</button>
-                    <button className="mini-btn mini-btn-warn" onClick={() => setIssueFor(issueFor === item.id ? null : item.id)}><Wrench size={13} /> 파손·고장 등록</button>
-                  </div>
-                  <p className="muted small">마지막 점검: {item.lastCheckedAt}</p>
+                  ) : (
+                    <>
+                      <div className="inv-top">
+                        <div>
+                          <h4>{item.name}</h4>
+                          <span className={`qty-badge ${low ? "qty-low" : ""}`}>{item.quantity}{item.unit} 보유 · 최소 {item.minThreshold}{item.unit}</span>
+                        </div>
+                        <div>
+                          <button className="icon-btn" onClick={() => startEdit(item)} title="수정"><Pencil size={15} /></button>
+                          <button className="icon-btn" onClick={() => remove(item.id)} title="삭제"><Trash2 size={15} /></button>
+                        </div>
+                      </div>
+                      <div className="inv-actions">
+                        <button className="mini-btn" onClick={() => adjust(item.id, -1)}><PackageMinus size={13} /> 사용</button>
+                        <button className="mini-btn" onClick={() => adjust(item.id, 1)}><PackagePlus size={13} /> 입고</button>
+                        <button className="mini-btn" onClick={() => checkOff(item.id)}><ClipboardCheck size={13} /> 점검완료</button>
+                        <button className="mini-btn mini-btn-warn" onClick={() => setIssueFor(issueFor === item.id ? null : item.id)}><Wrench size={13} /> 파손·고장 등록</button>
+                      </div>
+                      <p className="muted small">마지막 점검: {item.lastCheckedAt}</p>
+                    </>
+                  )}
 
                   {issueFor === item.id && (
                     <IssueForm onSubmit={(issue) => { addIssue(item.id, issue); setIssueFor(null); }} />
                   )}
 
-                  {(item.purchaseHistory.length > 0 || item.issueHistory.length > 0) && (
+                  {!isEditing && (
                     <details className="history">
-                      <summary><ChevronDown size={13} /> 이력 보기</summary>
-                      {item.purchaseHistory.length > 0 && (
-                        <div className="history-block">
-                          <p className="history-label">구매·지출 이력</p>
-                          {item.purchaseHistory.map((p, idx) => (
-                            <div className="history-row" key={idx}><span>{p.date} · {p.vendor}</span><span>{p.qty}{item.unit} · {won(p.cost)}</span></div>
-                          ))}
-                        </div>
-                      )}
+                      <summary><ChevronDown size={13} /> 이력 보기 · 수정</summary>
+
+                      <div className="history-block">
+                        <p className="history-label">구매·지출 이력</p>
+                        {item.purchaseHistory.map((p, idx) => {
+                          const key = `${item.id}:${idx}`;
+                          if (editingHistory === key) {
+                            return (
+                              <div className="history-edit-row" key={idx}>
+                                <input type="date" defaultValue={p.date} onChange={(e) => (p._date = e.target.value)} />
+                                <input type="number" defaultValue={p.qty} placeholder="수량" onChange={(e) => (p._qty = e.target.value)} />
+                                <input type="number" defaultValue={p.cost} placeholder="금액" onChange={(e) => (p._cost = e.target.value)} />
+                                <input defaultValue={p.vendor} placeholder="구매처" onChange={(e) => (p._vendor = e.target.value)} />
+                                <button className="icon-btn" onClick={() => saveHistoryEdit(item.id, idx, { date: p._date ?? p.date, qty: p._qty ?? p.qty, cost: p._cost ?? p.cost, vendor: p._vendor ?? p.vendor })}><Check size={14} /></button>
+                              </div>
+                            );
+                          }
+                          return (
+                            <div className="history-row" key={idx}>
+                              <span>{p.date} · {p.vendor}</span>
+                              <span>{p.qty}{item.unit} · {won(p.cost)}</span>
+                              <span className="history-row-actions">
+                                <button className="icon-btn" onClick={() => setEditingHistory(key)}><Pencil size={12} /></button>
+                                <button className="icon-btn" onClick={() => deleteHistoryEntry(item.id, idx)}><Trash2 size={12} /></button>
+                              </span>
+                            </div>
+                          );
+                        })}
+
+                        {addHistoryFor === item.id ? (
+                          <div className="history-edit-row">
+                            <input type="date" value={historyDraft.date} onChange={(e) => setHistoryDraft({ ...historyDraft, date: e.target.value })} />
+                            <input type="number" placeholder="수량" value={historyDraft.qty} onChange={(e) => setHistoryDraft({ ...historyDraft, qty: e.target.value })} />
+                            <input type="number" placeholder="금액" value={historyDraft.cost} onChange={(e) => setHistoryDraft({ ...historyDraft, cost: e.target.value })} />
+                            <input placeholder="구매처" value={historyDraft.vendor} onChange={(e) => setHistoryDraft({ ...historyDraft, vendor: e.target.value })} />
+                            <button className="icon-btn" onClick={() => submitNewHistory(item.id)}><Check size={14} /></button>
+                          </div>
+                        ) : (
+                          <button className="mini-btn" onClick={() => { setAddHistoryFor(item.id); setHistoryDraft({ date: new Date().toISOString().slice(0, 10), qty: 1, cost: 0, vendor: "" }); }}><Plus size={13} /> 구매 이력 추가</button>
+                        )}
+                      </div>
+
                       {item.issueHistory.length > 0 && (
                         <div className="history-block">
                           <p className="history-label">파손·고장 이력</p>
@@ -2080,7 +2174,11 @@ a { text-decoration: none; }
 .history summary { cursor:pointer; display:flex; align-items:center; gap:4px; color: var(--stone); font-weight:600; }
 .history-block { margin-top:8px; padding-top:8px; border-top:1px dashed var(--line); }
 .history-label { font-weight:700; color:#8A8368; margin-bottom:4px; }
-.history-row { display:flex; justify-content:space-between; padding:2px 0; color:#4B4732; }
+.history-row { display:flex; justify-content:space-between; align-items:center; padding:3px 0; color:#4B4732; gap:8px; }
+.history-row-actions { display:flex; gap:2px; flex-shrink:0; }
+.history-edit-row { display:grid; grid-template-columns: 1fr 0.7fr 0.9fr 1.2fr auto; gap:6px; padding:6px 0; align-items:center; }
+.history-edit-row input { border:1px solid var(--line); border-radius:6px; padding:5px 6px; font-size:12px; width:100%; }
+.inv-edit-form { display:flex; flex-direction:column; gap:12px; }
 .issue-form { margin-top:10px; padding-top:10px; border-top:1px dashed var(--line); }
 
 .form-panel .form-row { margin-bottom:4px; }
