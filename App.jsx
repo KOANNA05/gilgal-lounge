@@ -908,7 +908,7 @@ function GuestPage({ reservations, onReserve, inquiries, onAddInquiry, galleryPo
   return (
     <div>
       <section className="hero">
-        <div className="hero-circle"><StoneCircle size={220} tone="#E7C6A9" /></div>
+        <div className="hero-circle"><StoneCircle size={220} tone="#C99C77" /></div>
         <div className="hero-inner">
           <img className="plaque-img" src={PLAQUE_PHOTO} alt="길갈라운지 명패" />
           <p className="hero-desc">
@@ -1855,11 +1855,11 @@ a { text-decoration: none; }
 .admin-gate-actions { display:flex; flex-direction:column; gap:8px; margin-top:12px; }
 
 /* ---- hero ---- */
-.hero { position:relative; background: linear-gradient(160deg, #45392C 0%, #2A2118 70%); overflow:hidden; padding: 70px 26px 90px; color:#F3EADD; }
-.hero-circle { position:absolute; right:-40px; top:-40px; opacity:0.5; }
+.hero { position:relative; background: linear-gradient(160deg, #F5EEDD 0%, #EDE1C7 75%); overflow:hidden; padding: 70px 26px 90px; color: var(--ink); }
+.hero-circle { position:absolute; right:-40px; top:-40px; opacity:0.35; }
 .hero-inner { position:relative; z-index:2; max-width:640px; margin:0 auto; text-align:center; }
-.brandmark { display:inline-flex; align-items:center; gap:8px; font-weight:800; font-size:14px; color: var(--terra); background: rgba(255,255,255,0.08); padding:6px 14px; border-radius:999px; margin-bottom:18px; }
-.plaque-img { display:block; max-width:340px; width:100%; margin:0 auto 22px; border-radius:10px; box-shadow:0 14px 34px rgba(0,0,0,0.35); }
+.brandmark { display:inline-flex; align-items:center; gap:8px; font-weight:800; font-size:14px; color: var(--terra-dark); background: rgba(181,87,58,0.08); padding:6px 14px; border-radius:999px; margin-bottom:18px; }
+.plaque-img { display:block; max-width:340px; width:100%; margin:0 auto 22px; border-radius:10px; box-shadow:0 14px 30px rgba(60,50,30,0.18); }
 .eyebrow { display:inline-flex; align-items:center; font-size:13px; font-weight:700; color: var(--terra-dark); margin:0; }
 .eyebrow::before {
   content:"";
@@ -1874,8 +1874,8 @@ a { text-decoration: none; }
     radial-gradient(circle at 22px 4px, var(--moss) 1.8px, transparent 2.3px);
 }
 .hero-inner h1 { font-size:36px; line-height:1.32; margin-bottom:16px; }
-.hero-desc { font-size:14.5px; line-height:1.7; color:#D8CFB8; margin-bottom:26px; }
-.addr-note { display:flex; align-items:center; justify-content:center; gap:5px; font-size:12.5px; color:#D8A98C; margin-top:16px; }
+.hero-desc { font-size:14.5px; line-height:1.7; color:#5C5540; margin-bottom:26px; }
+.addr-note { display:flex; align-items:center; justify-content:center; gap:5px; font-size:12.5px; color: var(--terra-dark); margin-top:16px; }
 
 .btn { display:inline-flex; align-items:center; gap:8px; justify-content:center; border:none; border-radius:10px; padding:13px 24px; font-weight:700; font-size:14.5px; }
 .btn:disabled { opacity:0.4; cursor:not-allowed; }
