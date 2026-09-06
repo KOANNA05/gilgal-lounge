@@ -1861,7 +1861,18 @@ a { text-decoration: none; }
 .brandmark { display:inline-flex; align-items:center; gap:8px; font-weight:800; font-size:14px; color: var(--terra); background: rgba(255,255,255,0.08); padding:6px 14px; border-radius:999px; margin-bottom:18px; }
 .plaque-img { display:block; max-width:340px; width:100%; margin:0 auto 22px; border-radius:10px; box-shadow:0 14px 34px rgba(0,0,0,0.35); }
 .eyebrow { display:inline-flex; align-items:center; font-size:13px; font-weight:700; color: var(--terra-dark); margin:0; }
-.eyebrow::before { content:""; display:inline-block; width:6px; height:6px; border-radius:50%; background: var(--terra); box-shadow: 10px 0 0 -1px var(--stone), 18px 1px 0 -1.5px var(--moss); margin-right:20px; }
+.eyebrow::before {
+  content:"";
+  display:inline-block;
+  width:26px;
+  height:10px;
+  margin-right:12px;
+  flex-shrink:0;
+  background:
+    radial-gradient(circle at 3px 5px, var(--terra) 3px, transparent 3.5px),
+    radial-gradient(circle at 14px 6px, var(--stone) 2.2px, transparent 2.7px),
+    radial-gradient(circle at 22px 4px, var(--moss) 1.8px, transparent 2.3px);
+}
 .hero-inner h1 { font-size:36px; line-height:1.32; margin-bottom:16px; }
 .hero-desc { font-size:14.5px; line-height:1.7; color:#D8CFB8; margin-bottom:26px; }
 .addr-note { display:flex; align-items:center; justify-content:center; gap:5px; font-size:12.5px; color:#D8A98C; margin-top:16px; }
