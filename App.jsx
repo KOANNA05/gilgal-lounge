@@ -517,20 +517,25 @@ function groupByYear(monthlyTotals) {
 /* ---------------------------- 시그니처: 스톤 서클 ---------------------------- */
 
 function StoneCircle({ size = 40, tone = "#B5573A" }) {
-  const stones = 8;
-  const items = Array.from({ length: stones });
-  const r = size * 0.36;
-  const c = size / 2;
+  // 명패의 돌무더기(12개, 이스라엘 12지파를 기억하는 기념돌)를 본뜬 아이콘: 5-4-3, 세 줄로 쌓은 모양
+  const rows = [5, 4, 3];
+  const rowGap = size * 0.24;
+  const rx = size * 0.115;
+  const ry = size * 0.09;
+  const spacing = size * 0.2;
+  const items = [];
+  rows.forEach((count, rowIndex) => {
+    const y = size * 0.86 - rowIndex * rowGap;
+    for (let i = 0; i < count; i++) {
+      const x = size / 2 + (i - (count - 1) / 2) * spacing;
+      items.push({ x, y, key: `${rowIndex}-${i}`, top: rowIndex === rows.length - 1 && i === 1 });
+    }
+  });
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-      {items.map((_, i) => {
-        const angle = (i / stones) * Math.PI * 2 - Math.PI / 2;
-        const x = c + r * Math.cos(angle);
-        const y = c + r * Math.sin(angle);
-        const rw = size * 0.11, rh = size * 0.08;
-        return <ellipse key={i} cx={x} cy={y} rx={rw} ry={rh} fill={i === 0 ? tone : "currentColor"} transform={`rotate(${(angle * 180) / Math.PI + 90} ${x} ${y})`} />;
-      })}
-      <circle cx={c} cy={c} r={size * 0.06} fill="currentColor" opacity="0.4" />
+      {items.map((it) => (
+        <ellipse key={it.key} cx={it.x} cy={it.y} rx={rx} ry={ry} fill={it.top ? tone : "currentColor"} opacity={it.top ? 1 : 0.82} />
+      ))}
     </svg>
   );
 }
