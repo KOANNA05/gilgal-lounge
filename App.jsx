@@ -211,6 +211,9 @@ const SEED_INVENTORY = [
     { date: "2026-02-18", qty: 1, cost: 15000, vendor: "당근마켓 · Silit 스텐 냄비찜기 세트" },
     { date: "2026-06-26", qty: 1, cost: 5000, vendor: "당근마켓 · 지프냄비 세트(캠핑)" },
   ], issueHistory: [] },
+  { id: "i54", category: "주방·생활용품", name: "가마솥 뚜껑 (안동 주물, 53cm)", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [
+    { date: "2026-09-07", qty: 1, cost: 70030, vendor: "당근마켓 · 자연인(경상북도 영주시) (물품 65,000원+수수료 1,430원+배송비 3,600원)" },
+  ], issueHistory: [] },
   { id: "i13", category: "주방·생활용품", name: "후라이팬", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2026-05-03", purchaseHistory: [{ date: "2026-05-03", qty: 2, cost: 20000, vendor: "" }], issueHistory: [] },
   { id: "i14", category: "주방·생활용품", name: "전기밥솥 (10인용)", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-05-03", purchaseHistory: [{ date: "2026-05-03", qty: 1, cost: 50000, vendor: "" }], issueHistory: [] },
   { id: "i15", category: "주방·생활용품", name: "전기밥솥 (2인용)", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-05-03", purchaseHistory: [{ date: "2026-05-03", qty: 1, cost: 120000, vendor: "" }], issueHistory: [] },
@@ -1603,7 +1606,7 @@ function AdminCosts({ reservations, inventory, utilityBills, setUtilityBills, ma
       <div className="panel">
         <h3>연도별 합계</h3>
         <div className="table-wrap">
-          <table className="tbl">
+          <table className="tbl tbl-nums">
             <thead><tr><th>연도</th><th>매출</th><th>지출</th><th>순이익</th></tr></thead>
             <tbody>
               {yearlyTotals.length === 0 ? (
@@ -1624,7 +1627,7 @@ function AdminCosts({ reservations, inventory, utilityBills, setUtilityBills, ma
       <div className="panel">
         <h3>월별 합계 (전체 기간)</h3>
         <div className="table-wrap">
-          <table className="tbl">
+          <table className="tbl tbl-nums">
             <thead><tr><th>월</th><th>매출</th><th>지출</th><th>순이익</th></tr></thead>
             <tbody>
               {allMonthlyTotals.length === 0 ? (
@@ -2145,6 +2148,7 @@ a { text-decoration: none; }
 .tbl th { text-align:left; font-size:11.5px; text-transform:uppercase; color:#8A8368; padding:12px 14px; border-bottom:1px solid var(--line); }
 .tbl td { padding:12px 14px; border-bottom:1px solid var(--line); vertical-align:top; }
 .tbl tr:last-child td { border-bottom:none; }
+.tbl-nums th:not(:first-child), .tbl-nums td:not(:first-child) { text-align:right; font-variant-numeric: tabular-nums; }
 .status-select { border:1px solid var(--line); border-radius:8px; padding:6px 8px; font-size:12.5px; background:#fff; }
 .badge { font-size:11.5px; font-weight:700; padding:3px 9px; border-radius:999px; }
 .badge-ok { background:#E3E9DB; color: var(--moss-dark); }
