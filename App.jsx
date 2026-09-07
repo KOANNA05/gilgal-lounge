@@ -115,204 +115,204 @@ const HOLIDAYS_2026 = new Set([
   "2026-12-25", // 크리스마스
 ]);
 
-const INVENTORY_CATEGORIES = ["가전·가구", "침구·욕실", "주방·생활용품", "캠핑·야외용품", "관리·유류"];
+const INVENTORY_CATEGORIES = ["가전·디지털", "주방용품", "식품", "데코·식물", "조명", "수납정리", "생활용품", "생필품", "캠핑·레저", "공구·DIY"];
 
 const SEED_INVENTORY = [
   // 가전·가구
-  { id: "i1", category: "가전·가구", subcategory: "대형가전", name: "세탁기 (삼성 그랑데 통버블 16kg)", unit: "대", quantity: 1, minThreshold: 1, lastCheckedAt: "2025-10-03", purchaseHistory: [
+  { id: "i1", category: "가전·디지털", subcategory: "세탁기·건조기", name: "세탁기 (삼성 그랑데 통버블 16kg)", unit: "대", quantity: 1, minThreshold: 1, lastCheckedAt: "2025-10-03", purchaseHistory: [
     { date: "2025-10-03", qty: 1, cost: 468510, vendor: "쿠팡 · 삼성전자 WA16CG6441BY" },
     { date: "2025-10-03", qty: 1, cost: 6000, vendor: "쿠팡 · 안심케어 5년 무상보증" },
   ], issueHistory: [] },
-  { id: "i2", category: "가전·가구", subcategory: "대형가전", name: "냉장고 (LG전자 일반형, B502W33)", unit: "대", quantity: 1, minThreshold: 1, lastCheckedAt: "2025-10-01", purchaseHistory: [
+  { id: "i2", category: "가전·디지털", subcategory: "냉장고", name: "냉장고 (LG전자 일반형, B502W33)", unit: "대", quantity: 1, minThreshold: 1, lastCheckedAt: "2025-10-01", purchaseHistory: [
     { date: "2025-10-01", qty: 1, cost: 602080, vendor: "쿠팡 · LG전자 일반형냉장고 507L" },
   ], issueHistory: [] },
-  { id: "i3", category: "가전·가구", subcategory: "소형가전", name: "TV + 미러링 동글", unit: "대", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-07-11", purchaseHistory: [
+  { id: "i3", category: "가전·디지털", subcategory: "TV", name: "TV + 미러링 동글", unit: "대", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-07-11", purchaseHistory: [
     { date: "2025-10-02", qty: 1, cost: 308880, vendor: "쿠팡 · 위드라이프 55인치 4K UHD" },
     { date: "2026-02-13", qty: 1, cost: 35260, vendor: "쿠팡 · 유니콘 무선 4K 미러링 동글" },
     { date: "2026-07-11", qty: 1, cost: 25000, vendor: "당근마켓 · 구글 크롬캐스트 3세대" },
   ], issueHistory: [] },
-  { id: "i30", category: "가전·가구", subcategory: "대형가전", name: "에어컨 (삼성 벽걸이 AR09R5173HC)", unit: "대", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-07-17", purchaseHistory: [
+  { id: "i30", category: "가전·디지털", subcategory: "에어컨", name: "에어컨 (삼성 벽걸이 AR09R5173HC)", unit: "대", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-07-17", purchaseHistory: [
     { date: "2026-07-07", qty: 1, cost: 300000, vendor: "당근마켓 · 삼성전자" },
     { date: "2026-07-17", qty: 1, cost: 180000, vendor: "설치비" },
   ], issueHistory: [] },
-  { id: "i4", category: "가전·가구", subcategory: "소형가전", name: "인덕션 (SK매직 3구, 화이트)", unit: "대", quantity: 1, minThreshold: 1, lastCheckedAt: "2025-09-27", purchaseHistory: [
+  { id: "i4", category: "가전·디지털", subcategory: "주방가전", name: "인덕션 (SK매직 3구, 화이트)", unit: "대", quantity: 1, minThreshold: 1, lastCheckedAt: "2025-09-27", purchaseHistory: [
     { date: "2025-09-27", qty: 1, cost: 419000, vendor: "네이버 스마트스토어 · 나비엔 브랜드 공식스토어(SK매직)" },
   ], issueHistory: [] },
-  { id: "i31", category: "가전·가구", subcategory: "소형가전", name: "전기스토브 (한경희)", unit: "대", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-02-13", purchaseHistory: [
+  { id: "i31", category: "가전·디지털", subcategory: "계절가전", name: "전기스토브 (한경희)", unit: "대", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-02-13", purchaseHistory: [
     { date: "2026-02-13", qty: 1, cost: 5000, vendor: "당근마켓 · 한경희생활과학 HAAN-RT100" },
   ], issueHistory: [] },
-  { id: "i32", category: "가전·가구", subcategory: "수납가구", name: "전자렌지대", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-02-13", purchaseHistory: [
+  { id: "i32", category: "수납정리", subcategory: "선반", name: "전자렌지대", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-02-13", purchaseHistory: [
     { date: "2026-02-13", qty: 1, cost: 3000, vendor: "당근마켓" },
   ], issueHistory: [] },
-  { id: "i5", category: "가전·가구", subcategory: "소형가전", name: "청소기", unit: "대", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-05-03", purchaseHistory: [{ date: "2026-05-03", qty: 1, cost: 60000, vendor: "" }], issueHistory: [] },
-  { id: "i6", category: "가전·가구", subcategory: "대형가구", name: "플라스틱 의자", unit: "개", quantity: 18, minThreshold: 10, lastCheckedAt: "2025-09-28", purchaseHistory: [
+  { id: "i5", category: "가전·디지털", subcategory: "청소기", name: "청소기", unit: "대", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-05-03", purchaseHistory: [{ date: "2026-05-03", qty: 1, cost: 60000, vendor: "" }], issueHistory: [] },
+  { id: "i6", category: "생활용품", subcategory: "생활잡화", name: "플라스틱 의자", unit: "개", quantity: 18, minThreshold: 10, lastCheckedAt: "2025-09-28", purchaseHistory: [
     { date: "2026-05-03", qty: 10, cost: 60000, vendor: "" },
     { date: "2025-09-28", qty: 8, cost: 8000, vendor: "당근마켓 (구로동)" },
   ], issueHistory: [] },
-  { id: "i7", category: "가전·가구", subcategory: "대형가구", name: "원형 테이블", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2025-10-21", purchaseHistory: [
+  { id: "i7", category: "생활용품", subcategory: "생활잡화", name: "원형 테이블", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2025-10-21", purchaseHistory: [
     { date: "2026-05-03", qty: 1, cost: 10000, vendor: "" },
     { date: "2025-10-21", qty: 1, cost: 10000, vendor: "당근마켓 · 800 화이트 원형테이블" },
   ], issueHistory: [] },
-  { id: "i33", category: "가전·가구", subcategory: "수납가구", name: "사이드테이블·선반", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2026-07-05", purchaseHistory: [
+  { id: "i33", category: "수납정리", subcategory: "선반", name: "사이드테이블·선반", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2026-07-05", purchaseHistory: [
     { date: "2025-09-25", qty: 1, cost: 20000, vendor: "당근마켓 · 접이식 사이드테이블" },
     { date: "2026-07-05", qty: 1, cost: 5000, vendor: "당근마켓 · 트래블첵 3단 우드쉘프" },
   ], issueHistory: [] },
-  { id: "i34", category: "가전·가구", subcategory: "수납가구", name: "수납 트롤리·카트", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2025-10-21", purchaseHistory: [
+  { id: "i34", category: "수납정리", subcategory: "서랍·수납장", name: "수납 트롤리·카트", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2025-10-21", purchaseHistory: [
     { date: "2025-09-30", qty: 1, cost: 28000, vendor: "당근마켓 · 이케아 로스코그" },
     { date: "2025-10-21", qty: 1, cost: 5000, vendor: "당근마켓 · 보노하우스 모던슬림 트롤리 4단" },
   ], issueHistory: [] },
-  { id: "i35", category: "가전·가구", subcategory: "대형가구", name: "식탁 벤치 의자 (120x35)", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2025-10-04", purchaseHistory: [
+  { id: "i35", category: "생활용품", subcategory: "생활잡화", name: "식탁 벤치 의자 (120x35)", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2025-10-04", purchaseHistory: [
     { date: "2025-10-04", qty: 1, cost: 30000, vendor: "당근마켓 (철산3동)" },
   ], issueHistory: [] },
-  { id: "i8", category: "가전·가구", subcategory: "수납가구", name: "이케아 거울장 (안방)", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-05-03", purchaseHistory: [{ date: "2026-05-03", qty: 1, cost: 10000, vendor: "이케아" }], issueHistory: [] },
-  { id: "i9", category: "가전·가구", subcategory: "수납가구", name: "신발장", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-05-03", purchaseHistory: [{ date: "2026-05-03", qty: 1, cost: 5000, vendor: "" }], issueHistory: [] },
-  { id: "i10", category: "가전·가구", subcategory: "수납가구", name: "행거", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2025-09-30", purchaseHistory: [
+  { id: "i8", category: "수납정리", subcategory: "거울", name: "이케아 거울장 (안방)", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-05-03", purchaseHistory: [{ date: "2026-05-03", qty: 1, cost: 10000, vendor: "이케아" }], issueHistory: [] },
+  { id: "i9", category: "수납정리", subcategory: "서랍·수납장", name: "신발장", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-05-03", purchaseHistory: [{ date: "2026-05-03", qty: 1, cost: 5000, vendor: "" }], issueHistory: [] },
+  { id: "i10", category: "수납정리", subcategory: "행거·옷장", name: "행거", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2025-09-30", purchaseHistory: [
     { date: "2026-05-03", qty: 1, cost: 13000, vendor: "" },
     { date: "2025-09-30", qty: 1, cost: 15000, vendor: "당근마켓 · 2단 접이식 옷걸이 행거" },
   ], issueHistory: [] },
-  { id: "i11", category: "가전·가구", subcategory: "수납가구", name: "빨래건조대", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2026-08-01", purchaseHistory: [
+  { id: "i11", category: "생활용품", subcategory: "세탁용품", name: "빨래건조대", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2026-08-01", purchaseHistory: [
     { date: "2026-05-03", qty: 1, cost: 30000, vendor: "" },
     { date: "2026-08-01", qty: 1, cost: 37900, vendor: "쿠팡 · 딤즈 확장형 이불건조대" },
   ], issueHistory: [] },
-  { id: "i36", category: "가전·가구", subcategory: "기타", name: "자전거 (프림로즈, 노란색)", unit: "대", quantity: 1, minThreshold: 1, lastCheckedAt: "2025-09-30", purchaseHistory: [
+  { id: "i36", category: "캠핑·레저", subcategory: "레저", name: "자전거 (프림로즈, 노란색)", unit: "대", quantity: 1, minThreshold: 1, lastCheckedAt: "2025-09-30", purchaseHistory: [
     { date: "2025-09-30", qty: 1, cost: 60000, vendor: "당근마켓 (하안동)" },
   ], issueHistory: [] },
-  { id: "i37", category: "가전·가구", subcategory: "기타", name: "인테리어 소품 (벽시계·달력)", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2025-10-14", purchaseHistory: [
+  { id: "i37", category: "데코·식물", subcategory: "인테리어소품", name: "인테리어 소품 (벽시계·달력)", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2025-10-14", purchaseHistory: [
     { date: "2025-10-14", qty: 1, cost: 12000, vendor: "당근마켓 · 빈티지 벽시계" },
     { date: "2025-10-13", qty: 1, cost: 7000, vendor: "당근마켓 · 우드 만년달력" },
   ], issueHistory: [] },
 
   // 침구·욕실
-  { id: "i38", category: "침구·욕실", subcategory: "침구류", name: "이불·패드·베개커버 세트", unit: "세트", quantity: 4, minThreshold: 2, lastCheckedAt: "2026-02-16", purchaseHistory: [
+  { id: "i38", category: "생활용품", subcategory: "침구", name: "이불·패드·베개커버 세트", unit: "세트", quantity: 4, minThreshold: 2, lastCheckedAt: "2026-02-16", purchaseHistory: [
     { date: "2026-02-16", qty: 1, cost: 20890, vendor: "쿠팡 · 코멧홈 차렵이불+패드+베개커버" },
     { date: "2026-02-16", qty: 1, cost: 20890, vendor: "쿠팡 · 코멧홈 차렵이불+패드+베개커버" },
     { date: "2026-02-16", qty: 1, cost: 24270, vendor: "쿠팡 · 쁘리엘르 데일리체크 차렵침구" },
     { date: "2026-02-16", qty: 1, cost: 20380, vendor: "쿠팡 · 쁘리엘르 데일리체크 차렵침구" },
   ], issueHistory: [] },
-  { id: "i39", category: "침구·욕실", subcategory: "침구류", name: "베개 (메모리폼)", unit: "개", quantity: 2, minThreshold: 2, lastCheckedAt: "2026-03-12", purchaseHistory: [
+  { id: "i39", category: "생활용품", subcategory: "침구", name: "베개 (메모리폼)", unit: "개", quantity: 2, minThreshold: 2, lastCheckedAt: "2026-03-12", purchaseHistory: [
     { date: "2026-03-12", qty: 1, cost: 39870, vendor: "쿠팡 · 코멧홈 커버분리형 낮은 땅콩형" },
     { date: "2026-03-12", qty: 1, cost: 13990, vendor: "쿠팡 · 코멧홈 커버분리형 낮은 땅콩형" },
   ], issueHistory: [] },
-  { id: "i40", category: "침구·욕실", subcategory: "타월류", name: "수건 (업소용)", unit: "세트", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-03-12", purchaseHistory: [
+  { id: "i40", category: "생활용품", subcategory: "수건·타월", name: "수건 (업소용)", unit: "세트", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-03-12", purchaseHistory: [
     { date: "2026-03-12", qty: 1, cost: 9370, vendor: "쿠팡 · 코멧홈 오코텍스 인증 업소용" },
   ], issueHistory: [] },
-  { id: "i41", category: "침구·욕실", subcategory: "타월류", name: "현관·욕실 발매트", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-03-13", purchaseHistory: [
+  { id: "i41", category: "생활용품", subcategory: "욕실용품", name: "현관·욕실 발매트", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-03-13", purchaseHistory: [
     { date: "2026-03-13", qty: 1, cost: 28990, vendor: "쿠팡 · Kismetic 업소용 대형 발매트" },
   ], issueHistory: [] },
-  { id: "i42", category: "침구·욕실", subcategory: "욕실가전", name: "욕실 거울 수납장", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2025-10-08", purchaseHistory: [
+  { id: "i42", category: "수납정리", subcategory: "거울", name: "욕실 거울 수납장", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2025-10-08", purchaseHistory: [
     { date: "2025-10-08", qty: 1, cost: 10000, vendor: "당근마켓 · 이케아 군네른 (민트색)" },
   ], issueHistory: [] },
 
   // 주방·생활용품
-  { id: "i12", category: "주방·생활용품", subcategory: "식기류", name: "행남자기 그릇세트 (6인용)", unit: "세트", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-01-26", purchaseHistory: [
+  { id: "i12", category: "주방용품", subcategory: "그릇·식기", name: "행남자기 그릇세트 (6인용)", unit: "세트", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-01-26", purchaseHistory: [
     { date: "2026-01-26", qty: 1, cost: 12000, vendor: "당근마켓 · 스텐 파스타/샐러드볼·접시 5개세트" },
   ], issueHistory: [] },
-  { id: "i43", category: "주방·생활용품", subcategory: "조리도구", name: "냄비·조리도구 세트", unit: "세트", quantity: 2, minThreshold: 1, lastCheckedAt: "2026-06-26", purchaseHistory: [
+  { id: "i43", category: "주방용품", subcategory: "냄비·프라이팬·솥", name: "냄비·조리도구 세트", unit: "세트", quantity: 2, minThreshold: 1, lastCheckedAt: "2026-06-26", purchaseHistory: [
     { date: "2026-02-18", qty: 1, cost: 15000, vendor: "당근마켓 · Silit 스텐 냄비찜기 세트" },
     { date: "2026-06-26", qty: 1, cost: 5000, vendor: "당근마켓 · 지프냄비 세트(캠핑)" },
   ], issueHistory: [] },
-  { id: "i54", category: "주방·생활용품", subcategory: "조리도구", name: "가마솥 뚜껑 (안동 주물, 53cm)", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [
+  { id: "i54", category: "주방용품", subcategory: "냄비·프라이팬·솥", name: "가마솥 뚜껑 (안동 주물, 53cm)", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [
     { date: "2026-09-07", qty: 1, cost: 70030, vendor: "당근마켓 · 자연인(경상북도 영주시) (물품 65,000원+수수료 1,430원+배송비 3,600원)" },
   ], issueHistory: [] },
-  { id: "i13", category: "주방·생활용품", subcategory: "조리도구", name: "후라이팬", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2026-05-03", purchaseHistory: [{ date: "2026-05-03", qty: 2, cost: 20000, vendor: "" }], issueHistory: [] },
-  { id: "i14", category: "주방·생활용품", subcategory: "조리도구", name: "전기밥솥 (10인용)", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-05-03", purchaseHistory: [{ date: "2026-05-03", qty: 1, cost: 50000, vendor: "" }], issueHistory: [] },
-  { id: "i15", category: "주방·생활용품", subcategory: "조리도구", name: "전기밥솥 (2인용)", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-05-03", purchaseHistory: [{ date: "2026-05-03", qty: 1, cost: 120000, vendor: "" }], issueHistory: [] },
-  { id: "i16", category: "주방·생활용품", subcategory: "조리도구", name: "압력밥솥", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-08-01", purchaseHistory: [], issueHistory: [] },
-  { id: "i44", category: "주방·생활용품", subcategory: "조리도구", name: "주전자", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2025-10-15", purchaseHistory: [
+  { id: "i13", category: "주방용품", subcategory: "냄비·프라이팬·솥", name: "후라이팬", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2026-05-03", purchaseHistory: [{ date: "2026-05-03", qty: 2, cost: 20000, vendor: "" }], issueHistory: [] },
+  { id: "i14", category: "가전·디지털", subcategory: "주방가전", name: "전기밥솥 (10인용)", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-05-03", purchaseHistory: [{ date: "2026-05-03", qty: 1, cost: 50000, vendor: "" }], issueHistory: [] },
+  { id: "i15", category: "가전·디지털", subcategory: "주방가전", name: "전기밥솥 (2인용)", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-05-03", purchaseHistory: [{ date: "2026-05-03", qty: 1, cost: 120000, vendor: "" }], issueHistory: [] },
+  { id: "i16", category: "주방용품", subcategory: "냄비·프라이팬·솥", name: "압력밥솥", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-08-01", purchaseHistory: [], issueHistory: [] },
+  { id: "i44", category: "주방용품", subcategory: "냄비·프라이팬·솥", name: "주전자", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2025-10-15", purchaseHistory: [
     { date: "2025-10-15", qty: 1, cost: 10000, vendor: "당근마켓 · 퀸센스 스텐304 2.5L" },
   ], issueHistory: [] },
-  { id: "i45", category: "주방·생활용품", subcategory: "주방소모품", name: "보관용기 (쌀통·런치박스)", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2026-01-04", purchaseHistory: [
+  { id: "i45", category: "주방용품", subcategory: "보관·용기·도시락", name: "보관용기 (쌀통·런치박스)", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2026-01-04", purchaseHistory: [
     { date: "2025-10-10", qty: 1, cost: 5000, vendor: "당근마켓 · 씨멜렉스 쌀통 5kg" },
     { date: "2026-01-04", qty: 1, cost: 20000, vendor: "당근마켓 · 스탠리 런치박스" },
   ], issueHistory: [] },
-  { id: "i18", category: "주방·생활용품", subcategory: "식기류", name: "커피잔", unit: "개", quantity: 10, minThreshold: 4, lastCheckedAt: "2025-10-13", purchaseHistory: [
+  { id: "i18", category: "주방용품", subcategory: "컵·잔·텀블러", name: "커피잔", unit: "개", quantity: 10, minThreshold: 4, lastCheckedAt: "2025-10-13", purchaseHistory: [
     { date: "2026-05-03", qty: 6, cost: 20000, vendor: "" },
     { date: "2025-10-13", qty: 4, cost: 5000, vendor: "당근마켓 · 커피잔세트(미사용)" },
   ], issueHistory: [] },
-  { id: "i19", category: "주방·생활용품", subcategory: "위생용품", name: "휴지·키친타올·식탁보", unit: "개", quantity: 8, minThreshold: 4, lastCheckedAt: "2026-03-11", purchaseHistory: [
+  { id: "i19", category: "생필품", subcategory: "화장지·물티슈", name: "휴지·키친타올·식탁보", unit: "개", quantity: 8, minThreshold: 4, lastCheckedAt: "2026-03-11", purchaseHistory: [
     { date: "2026-03-11", qty: 1, cost: 3290, vendor: "쿠팡 · 탐사 일회용 비닐식탁보" },
   ], issueHistory: [] },
 
   // 캠핑·야외용품
-  { id: "i20", category: "캠핑·야외용품", subcategory: "아웃도어", name: "접이식 테이블", unit: "개", quantity: 4, minThreshold: 2, lastCheckedAt: "2026-06-26", purchaseHistory: [
+  { id: "i20", category: "캠핑·레저", subcategory: "캠핑용품", name: "접이식 테이블", unit: "개", quantity: 4, minThreshold: 2, lastCheckedAt: "2026-06-26", purchaseHistory: [
     { date: "2026-06-26", qty: 1, cost: 5000, vendor: "당근마켓 · 캠핑박스겸 테이블(캠퍼필드)" },
   ], issueHistory: [] },
-  { id: "i21", category: "캠핑·야외용품", subcategory: "아웃도어", name: "미니 캠핑의자", unit: "개", quantity: 8, minThreshold: 4, lastCheckedAt: "2026-06-25", purchaseHistory: [
+  { id: "i21", category: "캠핑·레저", subcategory: "캠핑용품", name: "미니 캠핑의자", unit: "개", quantity: 8, minThreshold: 4, lastCheckedAt: "2026-06-25", purchaseHistory: [
     { date: "2026-06-25", qty: 2, cost: 8000, vendor: "당근마켓 · 지프 체어 2개 세트" },
   ], issueHistory: [] },
-  { id: "i46", category: "캠핑·야외용품", subcategory: "아웃도어", name: "야외 벤치", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2025-10-04", purchaseHistory: [
+  { id: "i46", category: "캠핑·레저", subcategory: "캠핑용품", name: "야외 벤치", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2025-10-04", purchaseHistory: [
     { date: "2025-10-04", qty: 1, cost: 20000, vendor: "당근마켓 · 세레스홈 사각벤치 1200" },
   ], issueHistory: [] },
-  { id: "i47", category: "캠핑·야외용품", subcategory: "BBQ/조리", name: "휴대용 바비큐 그릴", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-02-15", purchaseHistory: [
+  { id: "i47", category: "캠핑·레저", subcategory: "캠핑용품", name: "휴대용 바비큐 그릴", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-02-15", purchaseHistory: [
     { date: "2026-02-15", qty: 1, cost: 27600, vendor: "쿠팡 · 휴대용 접이식 캠핑 바비큐 그릴" },
   ], issueHistory: [] },
-  { id: "i22", category: "캠핑·야외용품", subcategory: "BBQ/조리", name: "코펠", unit: "세트", quantity: 3, minThreshold: 1, lastCheckedAt: "2026-05-03", purchaseHistory: [], issueHistory: [] },
-  { id: "i23", category: "캠핑·야외용품", subcategory: "BBQ/조리", name: "버너", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-05-03", purchaseHistory: [], issueHistory: [] },
-  { id: "i24", category: "캠핑·야외용품", subcategory: "조명/엔터", name: "랜턴", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2026-07-08", purchaseHistory: [
+  { id: "i22", category: "캠핑·레저", subcategory: "캠핑용품", name: "코펠", unit: "세트", quantity: 3, minThreshold: 1, lastCheckedAt: "2026-05-03", purchaseHistory: [], issueHistory: [] },
+  { id: "i23", category: "캠핑·레저", subcategory: "캠핑용품", name: "버너", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-05-03", purchaseHistory: [], issueHistory: [] },
+  { id: "i24", category: "캠핑·레저", subcategory: "캠핑용품", name: "랜턴", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2026-07-08", purchaseHistory: [
     { date: "2026-07-08", qty: 1, cost: 6000, vendor: "당근마켓 · 할리스 하이브로우 캠핑랜턴 올리브" },
   ], issueHistory: [] },
-  { id: "i25", category: "캠핑·야외용품", subcategory: "조명/엔터", name: "고기굽는 화로", unit: "개", quantity: 3, minThreshold: 1, lastCheckedAt: "2026-05-03", purchaseHistory: [], issueHistory: [] },
-  { id: "i26", category: "캠핑·야외용품", subcategory: "조명/엔터", name: "불멍 화로·우드스토브", unit: "개", quantity: 4, minThreshold: 1, lastCheckedAt: "2026-02-16", purchaseHistory: [
+  { id: "i25", category: "캠핑·레저", subcategory: "캠핑용품", name: "고기굽는 화로", unit: "개", quantity: 3, minThreshold: 1, lastCheckedAt: "2026-05-03", purchaseHistory: [], issueHistory: [] },
+  { id: "i26", category: "캠핑·레저", subcategory: "캠핑용품", name: "불멍 화로·우드스토브", unit: "개", quantity: 4, minThreshold: 1, lastCheckedAt: "2026-02-16", purchaseHistory: [
     { date: "2026-02-16", qty: 1, cost: 38300, vendor: "쿠팡 · 레토 캠핑 접이식 우드스토브 화롯대" },
   ], issueHistory: [] },
-  { id: "i48", category: "캠핑·야외용품", subcategory: "BBQ/조리", name: "장작 (참나무)", unit: "박스", quantity: 2, minThreshold: 1, lastCheckedAt: "2026-04-29", purchaseHistory: [
+  { id: "i48", category: "캠핑·레저", subcategory: "캠핑용품", name: "장작 (참나무)", unit: "박스", quantity: 2, minThreshold: 1, lastCheckedAt: "2026-04-29", purchaseHistory: [
     { date: "2026-04-29", qty: 1, cost: 19290, vendor: "쿠팡 · 코멧 3중방습 국산 참나무장작" },
     { date: "2026-04-29", qty: 1, cost: 19290, vendor: "쿠팡 · 코멧 3중방습 국산 참나무장작" },
   ], issueHistory: [] },
-  { id: "i49", category: "캠핑·야외용품", subcategory: "BBQ/조리", name: "숯·불쏘시개 소모품", unit: "개", quantity: 3, minThreshold: 2, lastCheckedAt: "2026-03-12", purchaseHistory: [
+  { id: "i49", category: "캠핑·레저", subcategory: "캠핑용품", name: "숯·불쏘시개 소모품", unit: "개", quantity: 3, minThreshold: 2, lastCheckedAt: "2026-03-12", purchaseHistory: [
     { date: "2026-02-16", qty: 1, cost: 6790, vendor: "쿠팡 · 스위스마운틴 캠프파이어 오로라 불멍가루" },
     { date: "2026-03-12", qty: 1, cost: 17240, vendor: "쿠팡 · 금강 번개탄 연탄 불쏘시개" },
     { date: "2026-03-12", qty: 1, cost: 7220, vendor: "쿠팡 · 브리즈문 일회용 석쇠 그릴불판" },
     { date: "2026-03-12", qty: 1, cost: 27900, vendor: "쿠팡 · 지피니 바베큐참숯" },
   ], issueHistory: [] },
-  { id: "i27", category: "캠핑·야외용품", subcategory: "유지보수", name: "실외 빗자루", unit: "개", quantity: 3, minThreshold: 1, lastCheckedAt: "2026-08-13", purchaseHistory: [
+  { id: "i27", category: "생활용품", subcategory: "청소용품", name: "실외 빗자루", unit: "개", quantity: 3, minThreshold: 1, lastCheckedAt: "2026-08-13", purchaseHistory: [
     { date: "2026-08-13", qty: 1, cost: 10360, vendor: "쿠팡 · 월포 도로비 고급형 빗자루" },
   ], issueHistory: [] },
 
   // 관리·유류
-  { id: "i50", category: "관리·유류", subcategory: "유지보수", name: "삽 (오삽)", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-08-13", purchaseHistory: [
+  { id: "i50", category: "공구·DIY", subcategory: "공구", name: "삽 (오삽)", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-08-13", purchaseHistory: [
     { date: "2026-08-13", qty: 1, cost: 10080, vendor: "쿠팡 · dandan 오삽" },
   ], issueHistory: [] },
-  { id: "i51", category: "관리·유류", subcategory: "청소/생활", name: "멀티탭 (개별스위치 4구)", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-08-13", purchaseHistory: [
+  { id: "i51", category: "공구·DIY", subcategory: "전기", name: "멀티탭 (개별스위치 4구)", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-08-13", purchaseHistory: [
     { date: "2026-08-13", qty: 2, cost: 14350, vendor: "쿠팡 · 번개표 개별스위치 멀티탭 4구" },
   ], issueHistory: [{ date: "2026-08-03", type: "고장", note: "1개 반품 처리 (구매 2개 중 1개 반품완료)", resolved: true }] },
-  { id: "i52", category: "관리·유류", subcategory: "유지보수", name: "양면테이프·수리용품", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-08-03", purchaseHistory: [
+  { id: "i52", category: "공구·DIY", subcategory: "접착제·보수용품", name: "양면테이프·수리용품", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-08-03", purchaseHistory: [
     { date: "2026-08-03", qty: 1, cost: 21150, vendor: "쿠팡 · 몬스터겔 실리콘 양면테이프 30mm x 3m" },
   ], issueHistory: [] },
-  { id: "i53", category: "관리·유류", subcategory: "유지보수", name: "도어스토퍼", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-08-03", purchaseHistory: [
+  { id: "i53", category: "공구·DIY", subcategory: "가구부속품", name: "도어스토퍼", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-08-03", purchaseHistory: [
     { date: "2026-08-03", qty: 1, cost: 7500, vendor: "쿠팡 · 철물대장 무타공 원터치 말발굽" },
   ], issueHistory: [] },
-  { id: "i28", category: "관리·유류", subcategory: "난방/연료", name: "등유 (보일러용)", unit: "드럼", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-08-03", purchaseHistory: [{ date: "2026-05-03", qty: 1, cost: 320000, vendor: "" }, { date: "2026-07-18", qty: 1, cost: 290000, vendor: "" }], issueHistory: [{ date: "2026-07-18", type: "고장", note: "온수배관 누수로 수도/보일러 잠금 조치", resolved: true }] },
-  { id: "i29", category: "관리·유류", subcategory: "유지보수", name: "소화기", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-04-01", purchaseHistory: [], issueHistory: [] },
-  { id: "i55", category: "가전·가구", subcategory: "소형가전", name: "제습기", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i56", category: "가전·가구", subcategory: "소형가전", name: "전자레인지 / 전기포트", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i57", category: "가전·가구", subcategory: "IoT/보안", name: "LTE 무선 라우터", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i58", category: "가전·가구", subcategory: "IoT/보안", name: "홈캠 / 각종 센서", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i59", category: "가전·가구", subcategory: "대형가구", name: "침대 / 매트리스", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i60", category: "가전·가구", subcategory: "대형가구", name: "소파 / 리클라이너", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i61", category: "가전·가구", subcategory: "수납가구", name: "옷장", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i62", category: "침구·욕실", subcategory: "침구류", name: "게스트용 침구", unit: "세트", quantity: 0, minThreshold: 2, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i63", category: "침구·욕실", subcategory: "세면/세정", name: "샴푸 / 린스 / 바디워시", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i64", category: "침구·욕실", subcategory: "세면/세정", name: "비누 / 핸드워시", unit: "개", quantity: 0, minThreshold: 2, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i65", category: "침구·욕실", subcategory: "위생용품", name: "치약 / 일회용 칫솔", unit: "개", quantity: 0, minThreshold: 10, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i66", category: "침구·욕실", subcategory: "욕실가전", name: "헤어드라이기 / 면도기", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i67", category: "주방·생활용품", subcategory: "조리도구", name: "칼 / 도마 / 가위 / 집게", unit: "세트", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i68", category: "주방·생활용품", subcategory: "식기류", name: "수저 세트 / 포크", unit: "세트", quantity: 0, minThreshold: 6, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i69", category: "주방·생활용품", subcategory: "식기류", name: "물컵 / 음료·주류 잔", unit: "개", quantity: 0, minThreshold: 8, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i70", category: "주방·생활용품", subcategory: "주방소모품", name: "주방세제 / 수세미 / 행주", unit: "개", quantity: 0, minThreshold: 2, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i71", category: "주방·생활용품", subcategory: "주방소모품", name: "위생팩 / 지퍼백 / 종이호일", unit: "곽", quantity: 0, minThreshold: 2, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i72", category: "주방·생활용품", subcategory: "청소/생활", name: "종량제 봉투 (지역 전용)", unit: "장", quantity: 0, minThreshold: 10, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i73", category: "주방·생활용품", subcategory: "청소/생활", name: "음식물 쓰레기 봉투", unit: "장", quantity: 0, minThreshold: 5, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i74", category: "캠핑·야외용품", subcategory: "BBQ/조리", name: "부탄가스 / 이소가스", unit: "개", quantity: 0, minThreshold: 6, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i75", category: "캠핑·야외용품", subcategory: "아웃도어", name: "타프 / 그늘막", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i76", category: "캠핑·야외용품", subcategory: "조명/엔터", name: "아이스박스 / 쿨러백", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i77", category: "관리·유류", subcategory: "원예/마당", name: "예초기 / 잔디깎이", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i78", category: "관리·유류", subcategory: "원예/마당", name: "예초기 휘발유/오일", unit: "L", quantity: 0, minThreshold: 2, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i79", category: "관리·유류", subcategory: "원예/마당", name: "원예 도구 (삽/호미/갈퀴)", unit: "세트", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i80", category: "관리·유류", subcategory: "방충/방습", name: "제습제 (물먹는하마 등)", unit: "개", quantity: 0, minThreshold: 10, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i81", category: "관리·유류", subcategory: "방충/방습", name: "살충제 / 에프킬라 / 바퀴약", unit: "개", quantity: 0, minThreshold: 3, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i82", category: "관리·유류", subcategory: "유지보수", name: "수도 동파 방지 열선", unit: "개", quantity: 0, minThreshold: 2, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i83", category: "관리·유류", subcategory: "유지보수", name: "공구 세트 (드라이버/망치 등)", unit: "세트", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i28", category: "생활용품", subcategory: "생활잡화", name: "등유 (보일러용)", unit: "드럼", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-08-03", purchaseHistory: [{ date: "2026-05-03", qty: 1, cost: 320000, vendor: "" }, { date: "2026-07-18", qty: 1, cost: 290000, vendor: "" }], issueHistory: [{ date: "2026-07-18", type: "고장", note: "온수배관 누수로 수도/보일러 잠금 조치", resolved: true }] },
+  { id: "i29", category: "공구·DIY", subcategory: "안전·방범용품", name: "소화기", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-04-01", purchaseHistory: [], issueHistory: [] },
+  { id: "i55", category: "가전·디지털", subcategory: "생활·건강가전", name: "제습기", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i56", category: "가전·디지털", subcategory: "주방가전", name: "전자레인지 / 전기포트", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i57", category: "가전·디지털", subcategory: "컴퓨터·노트북", name: "LTE 무선 라우터", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i58", category: "가전·디지털", subcategory: "카메라", name: "홈캠 / 각종 센서", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i59", category: "생활용품", subcategory: "생활잡화", name: "침대 / 매트리스", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i60", category: "생활용품", subcategory: "생활잡화", name: "소파 / 리클라이너", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i61", category: "수납정리", subcategory: "행거·옷장", name: "옷장", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i62", category: "생활용품", subcategory: "침구", name: "게스트용 침구", unit: "세트", quantity: 0, minThreshold: 2, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i63", category: "생필품", subcategory: "헤어케어", name: "샴푸 / 린스 / 바디워시", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i64", category: "생필품", subcategory: "바디케어", name: "비누 / 핸드워시", unit: "개", quantity: 0, minThreshold: 2, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i65", category: "생필품", subcategory: "양치용품", name: "치약 / 일회용 칫솔", unit: "개", quantity: 0, minThreshold: 10, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i66", category: "가전·디지털", subcategory: "이미용가전", name: "헤어드라이기 / 면도기", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i67", category: "주방용품", subcategory: "칼·도마·커팅기구", name: "칼 / 도마 / 가위 / 집게", unit: "세트", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i68", category: "주방용품", subcategory: "수저·커트러리", name: "수저 세트 / 포크", unit: "세트", quantity: 0, minThreshold: 6, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i69", category: "주방용품", subcategory: "컵·잔·텀블러", name: "물컵 / 음료·주류 잔", unit: "개", quantity: 0, minThreshold: 8, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i70", category: "생필품", subcategory: "주방세제", name: "주방세제 / 수세미 / 행주", unit: "개", quantity: 0, minThreshold: 2, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i71", category: "주방용품", subcategory: "주방일회용품", name: "위생팩 / 지퍼백 / 종이호일", unit: "곽", quantity: 0, minThreshold: 2, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i72", category: "생활용품", subcategory: "청소용품", name: "종량제 봉투 (지역 전용)", unit: "장", quantity: 0, minThreshold: 10, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i73", category: "생활용품", subcategory: "청소용품", name: "음식물 쓰레기 봉투", unit: "장", quantity: 0, minThreshold: 5, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i74", category: "캠핑·레저", subcategory: "캠핑용품", name: "부탄가스 / 이소가스", unit: "개", quantity: 0, minThreshold: 6, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i75", category: "캠핑·레저", subcategory: "캠핑용품", name: "타프 / 그늘막", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i76", category: "캠핑·레저", subcategory: "캠핑용품", name: "아이스박스 / 쿨러백", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i77", category: "공구·DIY", subcategory: "공구", name: "예초기 / 잔디깎이", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i78", category: "공구·DIY", subcategory: "공구", name: "예초기 휘발유/오일", unit: "L", quantity: 0, minThreshold: 2, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i79", category: "공구·DIY", subcategory: "공구", name: "원예 도구 (삽/호미/갈퀴)", unit: "세트", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i80", category: "생필품", subcategory: "제습·탈취·방향제", name: "제습제 (물먹는하마 등)", unit: "개", quantity: 0, minThreshold: 10, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i81", category: "생필품", subcategory: "살충·방충제", name: "살충제 / 에프킬라 / 바퀴약", unit: "개", quantity: 0, minThreshold: 3, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i82", category: "공구·DIY", subcategory: "수도", name: "수도 동파 방지 열선", unit: "개", quantity: 0, minThreshold: 2, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i83", category: "공구·DIY", subcategory: "공구", name: "공구 세트 (드라이버/망치 등)", unit: "세트", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
 ];
 
 
