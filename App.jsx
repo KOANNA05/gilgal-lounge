@@ -115,7 +115,7 @@ const HOLIDAYS_2026 = new Set([
   "2026-12-25", // 크리스마스
 ]);
 
-const INVENTORY_CATEGORIES = ["가전·디지털", "주방용품", "식품", "데코·식물", "조명", "수납정리", "생활용품", "생필품", "캠핑·레저", "공구·DIY"];
+const INVENTORY_CATEGORIES = ["가전·디지털", "가구", "주방용품", "식품", "데코·식물", "조명", "수납정리", "생활용품", "생필품", "캠핑·레저", "공구·DIY"];
 
 const SEED_INVENTORY = [
   // 가전·가구
@@ -141,32 +141,32 @@ const SEED_INVENTORY = [
   { id: "i31", category: "가전·디지털", subcategory: "계절가전", name: "전기스토브 (한경희)", unit: "대", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-02-13", purchaseHistory: [
     { date: "2026-02-13", qty: 1, cost: 5000, vendor: "당근마켓 · 한경희생활과학 HAAN-RT100" },
   ], issueHistory: [] },
-  { id: "i32", category: "수납정리", subcategory: "선반", name: "전자렌지대", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-02-13", purchaseHistory: [
+  { id: "i32", category: "가구", subcategory: "선반", name: "전자렌지대", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-02-13", purchaseHistory: [
     { date: "2026-02-13", qty: 1, cost: 3000, vendor: "당근마켓" },
   ], issueHistory: [] },
   { id: "i5", category: "가전·디지털", subcategory: "청소기", name: "청소기", unit: "대", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-05-03", purchaseHistory: [{ date: "2026-05-03", qty: 1, cost: 60000, vendor: "" }], issueHistory: [] },
-  { id: "i6", category: "생활용품", subcategory: "생활잡화", name: "플라스틱 의자", unit: "개", quantity: 18, minThreshold: 10, lastCheckedAt: "2025-09-28", purchaseHistory: [
+  { id: "i6", category: "가구", subcategory: "의자", name: "플라스틱 의자", unit: "개", quantity: 18, minThreshold: 10, lastCheckedAt: "2025-09-28", purchaseHistory: [
     { date: "2026-05-03", qty: 10, cost: 60000, vendor: "" },
     { date: "2025-09-28", qty: 8, cost: 8000, vendor: "당근마켓 (구로동)" },
   ], issueHistory: [] },
-  { id: "i7", category: "생활용품", subcategory: "생활잡화", name: "원형 테이블", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2025-10-21", purchaseHistory: [
+  { id: "i7", category: "가구", subcategory: "테이블·식탁·책상", name: "원형 테이블", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2025-10-21", purchaseHistory: [
     { date: "2026-05-03", qty: 1, cost: 10000, vendor: "" },
     { date: "2025-10-21", qty: 1, cost: 10000, vendor: "당근마켓 · 800 화이트 원형테이블" },
   ], issueHistory: [] },
-  { id: "i33", category: "수납정리", subcategory: "선반", name: "사이드테이블·선반", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2026-07-05", purchaseHistory: [
+  { id: "i33", category: "가구", subcategory: "선반", name: "사이드테이블·선반", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2026-07-05", purchaseHistory: [
     { date: "2025-09-25", qty: 1, cost: 20000, vendor: "당근마켓 · 접이식 사이드테이블" },
     { date: "2026-07-05", qty: 1, cost: 5000, vendor: "당근마켓 · 트래블첵 3단 우드쉘프" },
   ], issueHistory: [] },
-  { id: "i34", category: "수납정리", subcategory: "서랍·수납장", name: "수납 트롤리·카트", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2025-10-21", purchaseHistory: [
+  { id: "i34", category: "가구", subcategory: "서랍·수납장", name: "수납 트롤리·카트", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2025-10-21", purchaseHistory: [
     { date: "2025-09-30", qty: 1, cost: 28000, vendor: "당근마켓 · 이케아 로스코그" },
     { date: "2025-10-21", qty: 1, cost: 5000, vendor: "당근마켓 · 보노하우스 모던슬림 트롤리 4단" },
   ], issueHistory: [] },
-  { id: "i35", category: "생활용품", subcategory: "생활잡화", name: "식탁 벤치 의자 (120x35)", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2025-10-04", purchaseHistory: [
+  { id: "i35", category: "가구", subcategory: "테이블·식탁·책상", name: "식탁 벤치 의자 (120x35)", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2025-10-04", purchaseHistory: [
     { date: "2025-10-04", qty: 1, cost: 30000, vendor: "당근마켓 (철산3동)" },
   ], issueHistory: [] },
-  { id: "i8", category: "수납정리", subcategory: "거울", name: "이케아 거울장 (안방)", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-05-03", purchaseHistory: [{ date: "2026-05-03", qty: 1, cost: 10000, vendor: "이케아" }], issueHistory: [] },
-  { id: "i9", category: "수납정리", subcategory: "서랍·수납장", name: "신발장", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-05-03", purchaseHistory: [{ date: "2026-05-03", qty: 1, cost: 5000, vendor: "" }], issueHistory: [] },
-  { id: "i10", category: "수납정리", subcategory: "행거·옷장", name: "행거", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2025-09-30", purchaseHistory: [
+  { id: "i8", category: "가구", subcategory: "거울", name: "이케아 거울장 (안방)", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-05-03", purchaseHistory: [{ date: "2026-05-03", qty: 1, cost: 10000, vendor: "이케아" }], issueHistory: [] },
+  { id: "i9", category: "가구", subcategory: "서랍·수납장", name: "신발장", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-05-03", purchaseHistory: [{ date: "2026-05-03", qty: 1, cost: 5000, vendor: "" }], issueHistory: [] },
+  { id: "i10", category: "가구", subcategory: "행거·옷장", name: "행거", unit: "개", quantity: 2, minThreshold: 1, lastCheckedAt: "2025-09-30", purchaseHistory: [
     { date: "2026-05-03", qty: 1, cost: 13000, vendor: "" },
     { date: "2025-09-30", qty: 1, cost: 15000, vendor: "당근마켓 · 2단 접이식 옷걸이 행거" },
   ], issueHistory: [] },
@@ -199,7 +199,7 @@ const SEED_INVENTORY = [
   { id: "i41", category: "생활용품", subcategory: "욕실용품", name: "현관·욕실 발매트", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2026-03-13", purchaseHistory: [
     { date: "2026-03-13", qty: 1, cost: 28990, vendor: "쿠팡 · Kismetic 업소용 대형 발매트" },
   ], issueHistory: [] },
-  { id: "i42", category: "수납정리", subcategory: "거울", name: "욕실 거울 수납장", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2025-10-08", purchaseHistory: [
+  { id: "i42", category: "가구", subcategory: "거울", name: "욕실 거울 수납장", unit: "개", quantity: 1, minThreshold: 1, lastCheckedAt: "2025-10-08", purchaseHistory: [
     { date: "2025-10-08", qty: 1, cost: 10000, vendor: "당근마켓 · 이케아 군네른 (민트색)" },
   ], issueHistory: [] },
 
@@ -288,9 +288,9 @@ const SEED_INVENTORY = [
   { id: "i56", category: "가전·디지털", subcategory: "주방가전", name: "전자레인지 / 전기포트", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
   { id: "i57", category: "가전·디지털", subcategory: "컴퓨터·노트북", name: "LTE 무선 라우터", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
   { id: "i58", category: "가전·디지털", subcategory: "카메라", name: "홈캠 / 각종 센서", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i59", category: "생활용품", subcategory: "생활잡화", name: "침대 / 매트리스", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i60", category: "생활용품", subcategory: "생활잡화", name: "소파 / 리클라이너", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
-  { id: "i61", category: "수납정리", subcategory: "행거·옷장", name: "옷장", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i59", category: "가구", subcategory: "침대", name: "침대 / 매트리스", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i60", category: "가구", subcategory: "소파", name: "소파 / 리클라이너", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
+  { id: "i61", category: "가구", subcategory: "행거·옷장", name: "옷장", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
   { id: "i62", category: "생활용품", subcategory: "침구", name: "게스트용 침구", unit: "세트", quantity: 0, minThreshold: 2, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
   { id: "i63", category: "생필품", subcategory: "헤어케어", name: "샴푸 / 린스 / 바디워시", unit: "개", quantity: 0, minThreshold: 1, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
   { id: "i64", category: "생필품", subcategory: "바디케어", name: "비누 / 핸드워시", unit: "개", quantity: 0, minThreshold: 2, lastCheckedAt: "2026-09-07", purchaseHistory: [], issueHistory: [] },
