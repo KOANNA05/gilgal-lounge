@@ -1934,6 +1934,8 @@ export default function App() {
             <a href="#book" className="toplink">예약하기</a>
             <a href="#lookup" className="toplink">예약 확인</a>
             <a href="#board" className="toplink">문의 게시판</a>
+            <a href="#reviews" className="toplink">리뷰</a>
+
           </div>
         )}
       </header>
