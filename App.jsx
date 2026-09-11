@@ -944,6 +944,60 @@ function ReviewBoard() {
     </section>
   );
 }
+function AdminReviews() {
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  function load() {
+    fetch(`${BACKEND_URL}/api/reviews`)
+      .then((r) => r.json())
+      .then((d) => { if (d.ok) setReviews(d.reviews); })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }
+
+  useEffect(() => { load(); }, []);
+
+  function handleDelete(id) {
+    if (!confirm("이 후기를 삭제할까요?")) return;
+    fetch(`${BACKEND_URL}/api/reviews/${id}`, {
+      method: "DELETE",
+      headers: { "x-admin-key": BACKEND_ADMIN_KEY },
+    })
+      .then((r) => r.json())
+      .then((d) => { if (d.ok) setReviews(reviews.filter((r) => r.id !== id)); })
+      .catch(() => {});
+  }
+
+  if (loading) return <p className="muted">불러오는 중...</p>;
+
+  return (
+    <div>
+      <h3>리뷰 관리 ({reviews.length}개)</h3>
+      {reviews.length === 0 ? (
+        <p className="muted">등록된 후기가 없어요.</p>
+      ) : (
+        [...reviews].reverse().map((r) => (
+          <div key={r.id} className="board-item" style={{ marginBottom: 10 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div>
+                <b>{r.name}</b>{" "}
+                <span style={{ color: "#B08D57" }}>{"★".repeat(r.rating)}</span>
+              </div>
+              <button className="btn" onClick={() => handleDelete(r.id)} style={{ background: "#c0392b", color: "#fff" }}>
+                삭제
+              </button>
+            </div>
+            {r.photoUrl && (
+              <img src={r.photoUrl} alt="사진" style={{ width: "100%", maxHeight: 200, objectFit: "cover", borderRadius: 8, margin: "8px 0" }} />
+            )}
+            <p className="board-msg">{r.text}</p>
+          </div>
+        ))
+      )}
+    </div>
+  );
+}
 
 function InquiryBoard({ inquiries, onAdd }) {
   const [name, setName] = useState("");
