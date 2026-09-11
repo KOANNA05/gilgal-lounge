@@ -1816,6 +1816,8 @@ const ADMIN_TABS = [
   { id: "costs", label: "비용 관리", icon: Receipt },
   { id: "inquiries", label: "문의 관리", icon: MessageCircle },
   { id: "gallery", label: "모습 관리", icon: ImageIcon },
+ { id: "reviews", label: "리뷰 관리" },
+ 
 ];
 
 // 관리자 접속 비밀번호. 원하는 값으로 바꾸고 싶으면 이 줄만 수정하면 돼요.
@@ -2058,6 +2060,8 @@ export default function App() {
         {role === "admin" && adminAuthed && adminTab === "costs" && <AdminCosts reservations={reservations} inventory={inventory} utilityBills={utilityBills} setUtilityBills={setUtilityBills} maintenance={maintenance} setMaintenance={setMaintenance} />}
         {role === "admin" && adminAuthed && adminTab === "inquiries" && <AdminInquiries inquiries={inquiries} onAnswer={answerInquiry} />}
         {role === "admin" && adminAuthed && adminTab === "gallery" && <AdminGallery posts={gallery} onAdd={addGalleryPost} onDelete={deleteGalleryPost} />}
+        {adminTab === "reviews" && <AdminReviews />}
+
       </main>
     </div>
   );
