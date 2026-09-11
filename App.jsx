@@ -836,57 +836,65 @@ function LookupSection({ reservations }) {
     </section>
   );
 }
-function ReviewBoard({ reviews = [], onAdd = () => {} }) {
-
-
+function ReviewBoard() {
+  const API = "https://gilgal-backend.onrender.com";
+  const [reviews, setReviews] = useState([]);
   const [name, setName] = useState("");
   const [rating, setRating] = useState(5);
   const [text, setText] = useState("");
   const [photoData, setPhotoData] = useState("");
   const [photoBusy, setPhotoBusy] = useState(false);
+  const [busy, setBusy] = useState(false);
 
-  const MAX_DIM = 1100;
-  const JPEG_QUALITY = 0.72;
+  useEffect(() => {
+    fetch(`${API}/api/reviews`)
+      .then((r) => r.json())
+      .then((d) => { if (d.ok) setReviews(d.reviews); })
+      .catch(() => {});
+  }, []);
 
-  function resizeImageFile(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onerror = () => reject(new Error("파일을 읽을 수 없어요"));
-      reader.onload = () => {
-        const img = new Image();
-        img.onerror = () => reject(new Error("이미지 처리 실패"));
-        img.onload = () => {
-          let { width, height } = img;
-          if (width > height && width > MAX_DIM) {
-            height = Math.round((height * MAX_DIM) / width);
-            width = MAX_DIM;
-          } else if (height >= width && height > MAX_DIM) {
-            width = Math.round((width * MAX_DIM) / height);
-            height = MAX_DIM;
-          }
-          const canvas = document.createElement("canvas");
-          canvas.width = width;
-          canvas.height = height;
-          canvas.getContext("2d").drawImage(img, 0, 0, width, height);
-          resolve(canvas.toDataURL("image/jpeg", JPEG_QUALITY));
-        };
-        img.src = reader.result;
-      };
-      reader.readAsDataURL(file);
-    });
-  }
-
-  async function handleFile(e) {
+  function handleFile(e) {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
     setPhotoBusy(true);
-    try {
-      setPhotoData(await resizeImageFile(file));
-    } catch (err) {
-      alert("사진을 불러오지 못했어요.");
-    } finally {
-      setPhotoBusy(false);
-    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (w > 1100) { h = Math.round((h * 1100) / w); w = 1100; }
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+        setPhotoData(canvas.toDataURL("image/jpeg", 0.72));
+        setPhotoBusy(false);
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function submit() {
+    if (!name.trim() || !text.trim()) return;
+    setBusy(true);
+    fetch(`${API}/api/reviews`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, rating, text, photoData }),
+    })
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.ok) {
+          setReviews([d.review, ...reviews]);
+          setName("");
+          setRating(5);
+          setText("");
+          setPhotoData("");
+        }
+        setBusy(false);
+      })
+      .catch(() => setBusy(false));
   }
 
   return (
@@ -895,58 +903,23 @@ function ReviewBoard({ reviews = [], onAdd = () => {} }) {
         <p className="eyebrow">리뷰</p>
         <h2>머물다 가신 이야기</h2>
       </div>
-
       <div className="board-form">
-        <input
-          placeholder="이름 (닉네임 가능)"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+        <input placeholder="이름 (닉네임 가능)" value={name} onChange={(e) => setName(e.target.value)} />
         <div style={{ display: "flex", gap: 4, margin: "8px 0" }}>
           {[1, 2, 3, 4, 5].map((n) => (
-            <span
-              key={n}
-              onClick={() => setRating(n)}
-              style={{
-                cursor: "pointer",
-                fontSize: 22,
-                color: n <= rating ? "#B08D57" : "#DCD5C0",
-              }}
-            >
-              ★
-            </span>
+            <span key={n} onClick={() => setRating(n)} style={{ cursor: "pointer", fontSize: 22, color: n <= rating ? "#B08D57" : "#DCD5C0" }}>★</span>
           ))}
         </div>
-        <textarea
-          rows={3}
-          placeholder="숙소는 어떠셨나요?"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        />
+        <textarea rows={3} placeholder="숙소는 어떠셨나요?" value={text} onChange={(e) => setText(e.target.value)} />
         <input type="file" accept="image/*" onChange={handleFile} />
-        {photoBusy && <p className="small muted">사진 준비 중…</p>}
-        {photoData && (
-          <img
-            src={photoData}
-            alt="미리보기"
-            style={{ width: "100%", maxHeight: 200, objectFit: "cover", borderRadius: 8, marginTop: 8 }}
-          />
+        {photoBusy && <p className="muted">사진 준비 중...</p>}
+        {photoData && !photoBusy && (
+          <img src={photoData} alt="미리보기" style={{ width: "100%", maxHeight: 200, objectFit: "cover", borderRadius: 8, marginTop: 8 }} />
         )}
-        <button
-          className="btn btn-pine"
-          disabled={!name.trim() || !text.trim() || photoBusy}
-          onClick={() => {
-            onAdd({ name, rating, text, photoData });
-            setName("");
-            setRating(5);
-            setText("");
-            setPhotoData("");
-          }}
-        >
-          후기 등록
+        <button className="btn btn-pine" disabled={!name.trim() || !text.trim() || busy || photoBusy} onClick={submit}>
+          {busy ? "등록 중..." : "후기 등록"}
         </button>
       </div>
-
       <div className="board-list">
         {reviews.length === 0 ? (
           <p className="muted">아직 등록된 후기가 없어요.</p>
@@ -961,11 +934,7 @@ function ReviewBoard({ reviews = [], onAdd = () => {} }) {
                 </span>
               </div>
               {r.photoUrl && (
-                <img
-                  src={r.photoUrl}
-                  alt={`${r.name}님 사진`}
-                  style={{ width: "100%", maxHeight: 260, objectFit: "cover", borderRadius: 8, margin: "8px 0" }}
-                />
+                <img src={r.photoUrl} alt={`${r.name}님 사진`} style={{ width: "100%", maxHeight: 260, objectFit: "cover", borderRadius: 8, margin: "8px 0" }} />
               )}
               <p className="board-msg">{r.text}</p>
             </div>
