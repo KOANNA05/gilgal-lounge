@@ -1217,7 +1217,9 @@ function GuestPage({ reservations, onReserve, inquiries, onAddInquiry, galleryPo
       <LookupSection reservations={reservations} />
 
       <InquiryBoard inquiries={inquiries} onAdd={onAddInquiry} />
+<ReviewBoard />
 
+      
       <footer className="foot">
         <StoneCircle size={22} light /> <span>길갈라운지 · 예약은 운영자 확인 후 확정됩니다.</span>
       </footer>
