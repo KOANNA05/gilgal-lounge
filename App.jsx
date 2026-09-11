@@ -836,6 +836,143 @@ function LookupSection({ reservations }) {
     </section>
   );
 }
+function ReviewBoard({ reviews, onAdd }) {
+  const [name, setName] = useState("");
+  const [rating, setRating] = useState(5);
+  const [text, setText] = useState("");
+  const [photoData, setPhotoData] = useState("");
+  const [photoBusy, setPhotoBusy] = useState(false);
+
+  const MAX_DIM = 1100;
+  const JPEG_QUALITY = 0.72;
+
+  function resizeImageFile(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error("파일을 읽을 수 없어요"));
+      reader.onload = () => {
+        const img = new Image();
+        img.onerror = () => reject(new Error("이미지 처리 실패"));
+        img.onload = () => {
+          let { width, height } = img;
+          if (width > height && width > MAX_DIM) {
+            height = Math.round((height * MAX_DIM) / width);
+            width = MAX_DIM;
+          } else if (height >= width && height > MAX_DIM) {
+            width = Math.round((width * MAX_DIM) / height);
+            height = MAX_DIM;
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL("image/jpeg", JPEG_QUALITY));
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function handleFile(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    setPhotoBusy(true);
+    try {
+      setPhotoData(await resizeImageFile(file));
+    } catch (err) {
+      alert("사진을 불러오지 못했어요.");
+    } finally {
+      setPhotoBusy(false);
+    }
+  }
+
+  return (
+    <section className="board-section" id="reviews">
+      <div className="section-head narrow">
+        <p className="eyebrow">리뷰</p>
+        <h2>머물다 가신 이야기</h2>
+      </div>
+
+      <div className="board-form">
+        <input
+          placeholder="이름 (닉네임 가능)"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <div style={{ display: "flex", gap: 4, margin: "8px 0" }}>
+          {[1, 2, 3, 4, 5].map((n) => (
+            <span
+              key={n}
+              onClick={() => setRating(n)}
+              style={{
+                cursor: "pointer",
+                fontSize: 22,
+                color: n <= rating ? "#B08D57" : "#DCD5C0",
+              }}
+            >
+              ★
+            </span>
+          ))}
+        </div>
+        <textarea
+          rows={3}
+          placeholder="숙소는 어떠셨나요?"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
+        <input type="file" accept="image/*" onChange={handleFile} />
+        {photoBusy && <p className="small muted">사진 준비 중…</p>}
+        {photoData && (
+          <img
+            src={photoData}
+            alt="미리보기"
+            style={{ width: "100%", maxHeight: 200, objectFit: "cover", borderRadius: 8, marginTop: 8 }}
+          />
+        )}
+        <button
+          className="btn btn-pine"
+          disabled={!name.trim() || !text.trim() || photoBusy}
+          onClick={() => {
+            onAdd({ name, rating, text, photoData });
+            setName("");
+            setRating(5);
+            setText("");
+            setPhotoData("");
+          }}
+        >
+          후기 등록
+        </button>
+      </div>
+
+      <div className="board-list">
+        {reviews.length === 0 ? (
+          <p className="muted">아직 등록된 후기가 없어요.</p>
+        ) : (
+          [...reviews].reverse().map((r) => (
+            <div className="board-item" key={r.id}>
+              <div className="board-q">
+                <b>{r.name}</b>{" "}
+                <span style={{ color: "#B08D57" }}>
+                  {"★".repeat(r.rating)}
+                  <span style={{ color: "#DCD5C0" }}>{"★".repeat(5 - r.rating)}</span>
+                </span>
+              </div>
+              {r.photoUrl && (
+                <img
+                  src={r.photoUrl}
+                  alt={`${r.name}님 사진`}
+                  style={{ width: "100%", maxHeight: 260, objectFit: "cover", borderRadius: 8, margin: "8px 0" }}
+                />
+              )}
+              <p className="board-msg">{r.text}</p>
+            </div>
+          ))
+        )}
+      </div>
+    </section>
+  );
+}
 
 function InquiryBoard({ inquiries, onAdd }) {
   const [name, setName] = useState("");
