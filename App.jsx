@@ -837,6 +837,7 @@ function LookupSection({ reservations }) {
   );
 }
 function ReviewBoard({ reviews, onAdd }) {
+
   const [name, setName] = useState("");
   const [rating, setRating] = useState(5);
   const [text, setText] = useState("");
