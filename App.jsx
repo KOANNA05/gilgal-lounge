@@ -1870,7 +1870,7 @@ const ADMIN_TABS = [
   { id: "costs", label: "비용 관리", icon: Receipt },
   { id: "inquiries", label: "문의 관리", icon: MessageCircle },
   { id: "gallery", label: "모습 관리", icon: ImageIcon },
-  { id: "reviews", label: "리뷰 관리", icon: icon: star },
+  { id: "reviews", label: "리뷰 관리", icon: star },
 
  
 ];
