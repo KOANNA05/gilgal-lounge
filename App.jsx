@@ -1871,8 +1871,6 @@ const ADMIN_TABS = [
   { id: "inquiries", label: "문의 관리", icon: MessageCircle },
   { id: "gallery", label: "모습 관리", icon: ImageIcon },
   { id: "reviews", label: "리뷰 관리", icon: star },
-
- 
 ];
 
 // 관리자 접속 비밀번호. 원하는 값으로 바꾸고 싶으면 이 줄만 수정하면 돼요.
