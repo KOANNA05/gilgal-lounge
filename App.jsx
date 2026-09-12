@@ -1667,7 +1667,7 @@ function IssueForm({ onSubmit }) {
   );
 }
 
-function AdminInquiries({ inquiries, onAnswer, onDelete }) {
+function AdminInquiries({ inquiries, onAnswer, onDelete={deleteInquiry}) {
   const [drafts, setDrafts] = useState({});
   const sorted = [...inquiries].reverse();
 
