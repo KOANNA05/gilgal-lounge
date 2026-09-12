@@ -479,6 +479,9 @@ async function postInquiryBackend(q) {
 async function answerInquiryBackend(id, answer) {
   return apiPatch(`/api/inquiries/${id}?key=${encodeURIComponent(BACKEND_ADMIN_KEY)}`, { answer });
 }
+async function deleteInquiryBackend(id) {
+  return apiDelete(`/api/inquiries/${id}?key=${encodeURIComponent(BACKEND_ADMIN_KEY)}`);
+}
 
 function dateRange(checkIn, checkOut) {
   const out = [];
