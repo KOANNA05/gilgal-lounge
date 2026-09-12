@@ -1680,6 +1680,14 @@ function AdminInquiries({ inquiries, onAnswer, onDelete={deleteInquiry}) {
             <div className="board-item" key={q.id}>
               <div className="board-q"><strong>{q.name}</strong><span className="muted small"> · {q.createdAt}</span></div>
               <p className="board-msg">{q.message}</p>
+              <button
+  className="btn"
+  style={{ background: "#c0392b", color: "#fff", marginTop: 6 }}
+  onClick={() => onDelete(q.id)}
+>
+  삭제
+</button>
+
               {q.answered ? (
                 <div className="board-answer"><span className="board-answer-tag">답변 완료</span>{q.answer}</div>
               ) : (
