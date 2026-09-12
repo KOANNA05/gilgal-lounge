@@ -2052,6 +2052,11 @@ export default function App() {
     if (BACKEND_URL) await answerInquiryBackend(id, answer);
     setInquiries((prev) => prev.map((q) => (q.id === id ? { ...q, answer, answered: true } : q)));
   }, []);
+  const deleteInquiry = useCallback(async (id) => {
+  if (BACKEND_URL) await deleteInquiryBackend(id);
+  setInquiries((prev) => prev.filter((q) => q.id !== id));
+}, []);
+
   const addGalleryPost = useCallback(async (p) => {
     if (BACKEND_URL) {
       const result = await postGalleryBackend(p);
