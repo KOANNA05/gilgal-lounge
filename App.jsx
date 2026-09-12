@@ -1034,6 +1034,14 @@ function InquiryBoard({ inquiries, onAdd }) {
               ) : (
                 <p className="muted small">답변 대기중이에요.</p>
               )}
+              <button
+  className="btn"
+  style={{ background: "#c0392b", color: "#fff", marginTop: 6 }}
+  onClick={() => onDelete(q.id)}
+>
+  삭제
+</button>
+
             </div>
           ))
         )}
