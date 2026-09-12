@@ -2115,7 +2115,7 @@ export default function App() {
         {role === "admin" && adminAuthed && adminTab === "reservations" && <AdminReservations reservations={reservations} setReservations={setReservations} />}
         {role === "admin" && adminAuthed && adminTab === "inventory" && <AdminInventory inventory={inventory} setInventory={setInventory} />}
         {role === "admin" && adminAuthed && adminTab === "costs" && <AdminCosts reservations={reservations} inventory={inventory} utilityBills={utilityBills} setUtilityBills={setUtilityBills} maintenance={maintenance} setMaintenance={setMaintenance} />}
-        {role === "admin" && adminAuthed && adminTab === "inquiries" && <AdminInquiries inquiries={inquiries} onAnswer={answerInquiry} />}
+        {role === "admin" && adminAuthed && adminTab === "inquiries" && <AdminInquiries inquiries={inquiries} onAnswer={answerInquiry} onDelete={deleteInquiry} />}
         {role === "admin" && adminAuthed && adminTab === "gallery" && <AdminGallery posts={gallery} onAdd={addGalleryPost} onDelete={deleteGalleryPost} />}
         {adminTab === "reviews" && <AdminReviews />}
 
