@@ -479,9 +479,6 @@ async function postInquiryBackend(q) {
 async function answerInquiryBackend(id, answer) {
   return apiPatch(`/api/inquiries/${id}?key=${encodeURIComponent(BACKEND_ADMIN_KEY)}`, { answer });
 }
-async function deleteInquiryBackend(id) {
-  return apiDelete(`/api/inquiries/${id}?key=${encodeURIComponent(BACKEND_ADMIN_KEY)}`);
-}
 
 function dateRange(checkIn, checkOut) {
   const out = [];
@@ -1034,7 +1031,6 @@ function InquiryBoard({ inquiries, onAdd }) {
               ) : (
                 <p className="muted small">답변 대기중이에요.</p>
               )}
-
             </div>
           ))
         )}
@@ -1668,7 +1664,7 @@ function IssueForm({ onSubmit }) {
   );
 }
 
-function AdminInquiries({ inquiries, onAnswer, onDelete}) {
+function AdminInquiries({ inquiries, onAnswer }) {
   const [drafts, setDrafts] = useState({});
   const sorted = [...inquiries].reverse();
 
@@ -1681,7 +1677,6 @@ function AdminInquiries({ inquiries, onAnswer, onDelete}) {
             <div className="board-item" key={q.id}>
               <div className="board-q"><strong>{q.name}</strong><span className="muted small"> · {q.createdAt}</span></div>
               <p className="board-msg">{q.message}</p>
-
               {q.answered ? (
                 <div className="board-answer"><span className="board-answer-tag">답변 완료</span>{q.answer}</div>
               ) : (
@@ -2054,11 +2049,6 @@ export default function App() {
     if (BACKEND_URL) await answerInquiryBackend(id, answer);
     setInquiries((prev) => prev.map((q) => (q.id === id ? { ...q, answer, answered: true } : q)));
   }, []);
-  const deleteInquiry = useCallback(async (id) => {
-  if (BACKEND_URL) await deleteInquiryBackend(id);
-  setInquiries((prev) => prev.filter((q) => q.id !== id));
-}, []);
-
   const addGalleryPost = useCallback(async (p) => {
     if (BACKEND_URL) {
       const result = await postGalleryBackend(p);
@@ -2122,7 +2112,7 @@ export default function App() {
         {role === "admin" && adminAuthed && adminTab === "reservations" && <AdminReservations reservations={reservations} setReservations={setReservations} />}
         {role === "admin" && adminAuthed && adminTab === "inventory" && <AdminInventory inventory={inventory} setInventory={setInventory} />}
         {role === "admin" && adminAuthed && adminTab === "costs" && <AdminCosts reservations={reservations} inventory={inventory} utilityBills={utilityBills} setUtilityBills={setUtilityBills} maintenance={maintenance} setMaintenance={setMaintenance} />}
-        {role === "admin" && adminAuthed && adminTab === "inquiries" && <AdminInquiries inquiries={inquiries} onAnswer={answerInquiry} onDelete={deleteInquiry} />}
+        {role === "admin" && adminAuthed && adminTab === "inquiries" && <AdminInquiries inquiries={inquiries} onAnswer={answerInquiry} />}
         {role === "admin" && adminAuthed && adminTab === "gallery" && <AdminGallery posts={gallery} onAdd={addGalleryPost} onDelete={deleteGalleryPost} />}
         {adminTab === "reviews" && <AdminReviews />}
 
